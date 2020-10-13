@@ -2,7 +2,7 @@
 # TODO add rotation of lines
 # TODO add translation of lines
 # TODO write lines to gcode
-# TODO write ender to gcode
+# TODO write finisher to gcode
 from printer import Printer
 import numpy as np
 import os

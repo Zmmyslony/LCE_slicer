@@ -1,20 +1,23 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pyximport; pyximport.install()
-import lines as lin
+import line_generation.generator as lin
 from shapes import generate_mesh
 from scipy.ndimage import convolve, generate_binary_structure
 
 
 def find_perimeter(shape_mat):
     kernel = generate_binary_structure(2, 2)
-    convolution = convolve(shape_mat, kernel, mode="wrap")
-    unsorted_perimeter = np.where(np.logical_and(convolution < 8, shape_mat == 1))
-    index_mat = np.indices(shape_mat.shape) #- np.reshape(np.array(shape_mat.shape), (2, 1, 1)) / 2
-    unsorted_perimeter_pos = index_mat[:, unsorted_perimeter[0], unsorted_perimeter[1]]
-    unsorted_perimeter_angle = np.arctan2(unsorted_perimeter_pos[0], unsorted_perimeter_pos[1])
-    sorted_perimeter = unsorted_perimeter_pos[:, np.argsort(unsorted_perimeter_angle)].transpose()
-    # print(sorted_perimeter)
+    sum_of_neighbours = convolve(shape_mat, kernel, mode="wrap")
+
+    index_mat = np.indices(shape_mat.shape) - np.reshape(np.array(shape_mat.shape), (2, 1, 1)) / 2
+
+    perimeter_unsorted_index = np.where(np.logical_and(sum_of_neighbours < 8, shape_mat == 1))
+    perimeter_unsorted_pos = index_mat[:, perimeter_unsorted_index[0], perimeter_unsorted_index[1]]
+    perimeter_unsorted_angle = np.arctan2(perimeter_unsorted_pos[0], perimeter_unsorted_pos[1])
+
+    sorted_perimeter = perimeter_unsorted_pos[:, np.argsort(perimeter_unsorted_angle)].transpose() + \
+                       np.reshape(np.array(shape_mat.shape), (1, 2)) / 2
     return sorted_perimeter
 
 
@@ -25,8 +28,8 @@ def generate_print_path(printer, shape, pattern, show_plots=False):
     x_field, y_field = pattern(x, y)
     desired_shape = np.array(shape_function(x, y), dtype=np.int32)
     perimeter = find_perimeter(desired_shape)
-    perimeter = np.array(perimeter, dtype=np.int32)
 
+    perimeter = np.array(perimeter, dtype=np.int32)
     lin.generate_lines(x_field, y_field, desired_shape, perimeter, printer)
 
     if show_plots:
@@ -34,6 +37,6 @@ def generate_print_path(printer, shape, pattern, show_plots=False):
         plt.quiver(x, y, x_field, y_field)
         plt.show()
 
-        plt.imshow(desired_shape)
-        plt.show()
+        # plt.imshow(desired_shape)
+        # plt.show()
     # return lines

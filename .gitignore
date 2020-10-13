@@ -1,2 +1,5 @@
 # Project exclude paths
 /venv/
+/line_generation/auxiliary.html
+/line_generation/auxiliary.c
+/line_generation/generator.c

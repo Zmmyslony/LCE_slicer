@@ -27,8 +27,8 @@ def square(a):
 
 
 def generate_mesh(boundaries, printer: Printer):
-    x_axis = np.arange(boundaries[0] - 2 * printer.accuracy, boundaries[1] + 2 * printer.accuracy, printer.accuracy)
-    y_axis = np.arange(boundaries[2] - 2 * printer.accuracy, boundaries[3] + 2 * printer.accuracy, printer.accuracy)
+    x_axis = np.arange(boundaries[0] - 20 * printer.accuracy, boundaries[1] + 20 * printer.accuracy, printer.accuracy)
+    y_axis = np.arange(boundaries[2] - 20 * printer.accuracy, boundaries[3] + 20 * printer.accuracy, printer.accuracy)
     x_grid, y_grid = np.meshgrid(x_axis, y_axis)
     return x_grid, y_grid
 

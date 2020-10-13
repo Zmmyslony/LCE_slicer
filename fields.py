@@ -42,6 +42,7 @@ horizontal_lines = lines(0)
 vertical_lines = lines(np.pi / 2)
 
 
+# TODO wrong definition– redefine it
 def archimedean_spiral(line_width):
     return spiral(np.arctan(2 * np.pi / line_width))
 
