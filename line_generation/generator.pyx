@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 
 # cimport line_generation.auxiliary as aux
 
-
+#TODO make the algorithm work irregardless of the starting angle
+#TODO fix random empty lines in between lines
 cdef int MIN_SEGMENT_NUMBER = 5
 cdef double ANGLE_THRESHOLD = 0.02
 cdef double MIN_DISTANCE_COEFFICIENT = 0.5
