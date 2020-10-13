@@ -14,7 +14,6 @@ cdef int MIN_SEGMENT_NUMBER = 5
 cdef double ANGLE_THRESHOLD = 0.02
 cdef double MIN_DISTANCE_COEFFICIENT = 0.5
 cdef double NEW_LINE_SEPARATION = 1
-cdef double MIN_LINE_SEPARATION = 1
 cdef int NEIGHBOUR_THRESHOLD = 1
 
 cdef double norm(double a, double b):
@@ -23,7 +22,10 @@ cdef double norm(double a, double b):
 
 
 cdef (double, double) normalize(double a, double b):
-    return a / norm(a, b), b / norm(a, b)
+    cdef double normalization_factor = norm(a, b)
+    cdef double a_normalized = a / normalization_factor
+    cdef double b_normalized = b / normalization_factor
+    return a_normalized, b_normalized
 
 
 cdef int check_index(int x_size, int y_size, int x, int y):
@@ -53,15 +55,15 @@ cdef int check_nearest_neighbours(int x_lower, int y_lower, int[:, :] empty_elem
     return up_left + up_right + down_left + down_right
 
 
-cdef int normalize_matrix(int[:, :] matrix):
+cdef int make_binary(int[:, :] matrix, int low=0, int high=1, double threshold=0):
     cdef int i = 0
     cdef int j = 0
     for i in range(matrix.shape[0]):
         for j in range(matrix.shape[1]):
-            if matrix[i, j] > 0:
-                matrix[i, j] = 1
+            if matrix[i, j] > threshold:
+                matrix[i, j] = high
             else:
-                matrix[i, j] = 0
+                matrix[i, j] = low
     return 0
 
     
@@ -87,30 +89,30 @@ cdef (int, int) find_next_perimeter(int[:, :] perimeter, int[:, :] empty_element
     return 0, 0
 
 
-cdef double get_average_vector(double[:, :] field, double x, double y):
-    cdef int x_int = int(floor(x))
-    cdef int y_int = int(floor(y))
+cdef double bilinear_interpolation(double[:, :] field, double x, double y):
+    cdef int x_1 = int(floor(x))
+    cdef int x_2 = x_1 + 1
+    cdef int y_1 = int(floor(y))
+    cdef int y_2 = y_1 + 1
     cdef double v = 0
 
-    v += field[x_int, y_int] * (1 + x_int - x) * (1 + y_int - y)
-    v += field[x_int, y_int + 1] * (1 + x_int - x) * (y - y_int)
-    v += field[x_int + 1, y_int + 1] * (x - x_int) * (y - y_int)
-    v += field[x_int + 1, y_int] * (x - x_int) * (1 + y_int - y)
+    v += field[x_1, y_1] * (x_2 - x) * (y_2 - y)
+    v += field[x_1, y_2] * (x_2 - x) * (y - y_1)
+    v += field[x_2, y_1] * (x - x_1) * (y_2 - y)
+    v += field[x_2, y_2] * (x - x_1) * (y - y_1)
     return v
 
 
-#TODO make this function pretty
 cdef (double, double) calculate_next_move(double x, double y, double vx_previous, double vy_previous,
                         double[:, :] x_field, double[:, :] y_field, int[:, :] empty_elements):
-    cdef int x_int = int(floor(x))
-    cdef int y_int = int(floor(y))
 
-    if check_nearest_neighbours(x_int, y_int, empty_elements) < NEIGHBOUR_THRESHOLD:
+    if check_nearest_neighbours(<int>x, <int>y, empty_elements) < NEIGHBOUR_THRESHOLD:
         return 10, 0
 
-    cdef double vx = get_average_vector(x_field, x, y)
-    cdef double vy = get_average_vector(y_field, x, y)
-    vx, vy = normalize(vx, vy)
+    cdef double vx = bilinear_interpolation(x_field, x, y)
+    cdef double vy = bilinear_interpolation(y_field, x, y)
+    # TODO investigate why this has to be swapped for it to work
+    vy, vx = normalize(vx, vy)
 
     cdef double scalar_product = vx_previous * vx + vy_previous * vy
     if scalar_product < 0:
@@ -136,21 +138,23 @@ cdef int fill_nearest_neighbours(double x_current, double y_current, int[:, :] f
 
 
 cdef int check_moving_forward(double distance, double scalar_product, double line_width, double distance_coefficient,
-                              int[:, :] filled_elements, double x_current, double y_current):
+                              int[:, :] filled_elements, double x_current, double y_current, double min_line_separation):
     cdef int x_pos = <int>round(x_current)
     cdef int y_pos = <int>round(y_current)
 
-    if distance > 0 and ((scalar_product < 1 - ANGLE_THRESHOLD) or (distance >
-        MIN_SEGMENT_NUMBER * line_width and distance_coefficient > MIN_DISTANCE_COEFFICIENT * line_width)):
-
-        return 0
-    elif not check_proximity(filled_elements, line_width * MIN_LINE_SEPARATION, x_pos, y_pos):
+    # if distance > 0 and ((scalar_product < 1 - ANGLE_THRESHOLD) or (distance >
+    #     MIN_SEGMENT_NUMBER * line_width and distance_coefficient > MIN_DISTANCE_COEFFICIENT * line_width)):
+    #
+    #     return 0
+    # elif not check_proximity(filled_elements, line_width * min_line_separation, x_pos, y_pos):
+    if not check_proximity(filled_elements, line_width * min_line_separation, x_pos, y_pos):
         return 0
     else:
         return 1
 
+
 cdef (double, double) add_line(double x_current, double y_current, double x_start, double y_start, double vx, double vy,
-                               double line_width, int[:, :] previously_filled_elements):
+                               double line_width, int[:, :] previously_filled_elements, double min_line_separation):
 
     cdef double distance_from_start = norm(x_current - x_start, y_current - y_start)
     cdef double vx_dir = (x_current - x_start) / distance_from_start
@@ -161,30 +165,31 @@ cdef (double, double) add_line(double x_current, double y_current, double x_star
     cdef double distance_coefficient = distance_from_nearest_grid / distance_from_start
 
     if check_moving_forward(distance_from_start, scalar_product, line_width, distance_coefficient,
-                            previously_filled_elements, x_current, y_current):
+                            previously_filled_elements, x_current, y_current, min_line_separation):
         return x_current + vx, y_current + vy
     else:
         return x_current, y_current
 
 
 
-cdef int update_empty_spots(int[:, :] empty_elements, int[:, :] filled_elements):
+cdef int update_empty_elements(int[:, :] empty_elements, int[:, :] filled_elements):
     cdef int i = 0
     cdef int j = 0
     for i in range(empty_elements.shape[0]):
         for j in range(empty_elements.shape[1]):
             empty_elements[i, j] -= filled_elements[i, j]
-    normalize_matrix(empty_elements)
+    make_binary(empty_elements)
     return 0
 
 
 def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2] y_field,
                    np.ndarray[int, ndim=2] desired_shape, np.ndarray[int, ndim=2] perimeter,
-                   printer: Printer):
+                   printer: Printer, double min_line_separation):
     cdef int[:, :] cperimeter = perimeter
 
     cdef double[:, :] cx_field = x_field
     cdef double[:, :] cy_field = y_field
+
     cdef int[:, :] empty_elements = desired_shape
     cdef int[:, :] filled_elements = np.zeros_like(desired_shape)
     cdef int[:, :] previously_filled_elements = np.zeros_like(desired_shape)
@@ -204,7 +209,6 @@ def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2
     cdef double y_new = 0
     cdef double vx = 0
     cdef double vy = 0
-    cdef int iterator = 0
 
     while True:
         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field, line_width)
@@ -214,10 +218,11 @@ def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2
         y_pos = y_start
         x_new = 0
         y_new = 0
-        # vx = cx_field[x_start, y_start]
-        # vy = cy_field[x_start, y_start]
+
         vx = empty_elements.shape[0] / 2 - x_pos
         vy = empty_elements.shape[1] / 2 - y_pos
+        previously_filled_elements[:] = filled_elements
+
 
         while empty_elements[<int>x_pos, <int>y_pos]:
             vx, vy = calculate_next_move(x_pos, y_pos, vx, vy, cx_field, cy_field, empty_elements)
@@ -225,7 +230,8 @@ def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2
                 fill_nearest_neighbours(x_pos, y_pos, filled_elements, line_width, x_size, y_size)
                 break
 
-            x_new, y_new = add_line(x_pos, y_pos, x_start, y_start, vx, vy, line_width, previously_filled_elements)
+            x_new, y_new = add_line(x_pos, y_pos, x_start, y_start, vx, vy, line_width, previously_filled_elements,
+                                    min_line_separation)
             fill_nearest_neighbours(x_new, y_new, filled_elements, line_width, x_size, y_size)
 
             if x_new != x_pos or y_new != y_pos:
@@ -234,12 +240,12 @@ def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2
             else:
                 break
 
-        update_empty_spots(empty_elements, filled_elements)
-        iterator += 1
-        previously_filled_elements = filled_elements
+        update_empty_elements(empty_elements, filled_elements)
+
+        # plt.imshow(previously_filled_elements)
+        # plt.show()
     plt.imshow(filled_elements)
     plt.show()
-
 
     return 0
 

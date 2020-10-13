@@ -15,8 +15,8 @@ concentric = spiral(np.pi / 2)
 
 def normalized_spiral(angle):
     def field(x: np.ndarray, y: np.ndarray):
-        x_field = np.cos(angle) * x - np.sin(angle) * y
-        y_field = np.sin(angle) * x + np.cos(angle) * y
+        x_field = np.cos(angle) * x + np.sin(angle) * y
+        y_field = -np.sin(angle) * x + np.cos(angle) * y
         norm = np.sqrt(x_field ** 2 + y_field ** 2)
         norm[np.where(norm == 0)] = 1
 
@@ -24,7 +24,7 @@ def normalized_spiral(angle):
     return field
 
 
-normalized_radial = normalized_spiral(0)
+normalized_radial = normalized_spiral(np.pi)
 normalized_concentric = normalized_spiral(np.pi / 2)
 
 
