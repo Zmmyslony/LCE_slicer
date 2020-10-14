@@ -8,4 +8,6 @@ generate_print_path(standard_print, shp.circle(25), fld.normalized_radial, show_
                     min_line_separation=0.0, sorting="opposite")
 generate_print_path(standard_print, shp.circle(25), fld.normalized_radial, show_plots=False)
 generate_print_path(standard_print, shp.circle(25), fld.horizontal_lines, show_plots=False)
+generate_print_path(standard_print, shp.circle(25), fld.lines(math.pi * 1/4), show_plots=False)
+
 

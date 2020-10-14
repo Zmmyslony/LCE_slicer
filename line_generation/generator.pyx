@@ -60,7 +60,8 @@ cdef int check_proximity(int[:, :] filled_elements, double distance, int x, int 
     cdef int j = 0
     for i in range(-limit, limit):
         for j in range(-limit, limit):
-            if check_index(filled_elements.shape[0], filled_elements.shape[1], x + i, y + j) and i ** 2 + j ** 2 < distance ** 2:
+            if check_index(filled_elements.shape[0], filled_elements.shape[1], x + i, y + j) and \
+                    i ** 2 + j ** 2 < distance ** 2:
                 if sign * filled_elements[x + i, y + j] > threshold:
                     return 0
     return 1
@@ -98,8 +99,7 @@ cdef int index_generator(int i, int size):
     cdef int current_base = 0
     size -= 1
 
-    #TODO optimize the python out of here
-    for j in range(LOG_BASES_SIZE): #[2, 3, 5, 7, 11, 13, 17]:
+    for j in range(LOG_BASES_SIZE):
         current_base = LOG_BASES[j]
         if decimal_part(log(size) / log(current_base)) < closeness:
             closeness = decimal_part(log(size) / log(current_base))
@@ -114,15 +114,14 @@ cdef int index_generator(int i, int size):
 
 cdef (bint, int, int) find_empty_spot(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,
                                            double line_width, int starting_index, int ending_index, int step=1):
+    cdef int j = starting_index
     cdef int i = 0
-    cdef int j = 0
-    cdef int rng = <int>(abs(starting_index - ending_index) / step)
-    for i in range(rng):
-        j = starting_index + step * i
+    cdef step_number = <int>(abs((starting_index - ending_index) / step))
+    for i in range(step_number):
+        j = starting_index + i * step
         if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
             if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
                 return True, perimeter[j, 0], perimeter[j, 1]
-
     return False, 0, 0
 
 
@@ -232,7 +231,6 @@ cdef (double, double) add_line(double x_current, double y_current, double x_star
         return x_current, y_current
 
 
-
 cdef int update_empty_elements(int[:, :] empty_elements, int[:, :] filled_elements):
     cdef int i = 0
     cdef int j = 0
@@ -287,7 +285,6 @@ def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2
         vy = empty_elements.shape[1] / 2 - y_pos
         previously_filled_elements[:] = filled_elements
 
-
         while empty_elements[<int>x_pos, <int>y_pos]:
             vx, vy = calculate_next_move(x_pos, y_pos, vx, vy, cx_field, cy_field, empty_elements)
             if vx == 10:
@@ -303,11 +300,8 @@ def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2
                 y_pos = y_new
             else:
                 break
-
         update_empty_elements(empty_elements, filled_elements)
-
-        # plt.imshow(previously_filled_elements)
-        # plt.show()
+    plt.figure(dpi=300)
     plt.imshow(filled_elements)
     plt.show()
 
