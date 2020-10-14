@@ -21,7 +21,7 @@ def find_perimeter(shape_mat):
     return sorted_perimeter
 
 
-def generate_print_path(printer, shape, pattern, show_plots=False, min_line_separation=0.9):
+def generate_print_path(printer, shape, pattern, show_plots=False, min_line_separation=0.9, sorting="consecutive"):
     boundaries = shape[1]
     shape_function = shape[0]
     x, y = generate_mesh(boundaries, printer)
@@ -30,7 +30,7 @@ def generate_print_path(printer, shape, pattern, show_plots=False, min_line_sepa
     perimeter = find_perimeter(desired_shape)
 
     perimeter = np.array(perimeter, dtype=np.int32)
-    lin.generate_lines(x_field, y_field, desired_shape, perimeter, printer, min_line_separation)
+    lin.generate_lines(x_field, y_field, desired_shape, perimeter, printer, min_line_separation, sorting)
 
     if show_plots:
         plt.figure(figsize=(8, 8))

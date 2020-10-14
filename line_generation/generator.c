@@ -1215,22 +1215,23 @@ typedef npy_cdouble __pyx_t_5numpy_complex_t;
 struct __pyx_ctuple_double__and_double;
 typedef struct __pyx_ctuple_double__and_double __pyx_ctuple_double__and_double;
 struct __pyx_opt_args_15line_generation_9generator_check_proximity;
+struct __pyx_opt_args_15line_generation_9generator_make_binary;
 struct __pyx_ctuple_int__and_int;
 typedef struct __pyx_ctuple_int__and_int __pyx_ctuple_int__and_int;
 
-/* "line_generation/generator.pyx":25
+/* "line_generation/generator.pyx":30
  * 
  * 
- * cdef (double, double) normalize(double a, double b) nogil:             # <<<<<<<<<<<<<<
- *     return a / norm(a, b), b / norm(a, b)
- * 
+ * cdef (double, double) normalize(double a, double b):             # <<<<<<<<<<<<<<
+ *     cdef double normalization_factor = norm(a, b)
+ *     cdef double a_normalized = a / normalization_factor
  */
 struct __pyx_ctuple_double__and_double {
   double f0;
   double f1;
 };
 
-/* "line_generation/generator.pyx":36
+/* "line_generation/generator.pyx":44
  * 
  * 
  * cdef int check_proximity(int[:, :] filled_elements, double distance, int x, int y, double sign=1, double threshold=0):             # <<<<<<<<<<<<<<
@@ -1243,12 +1244,26 @@ struct __pyx_opt_args_15line_generation_9generator_check_proximity {
   double threshold;
 };
 
-/* "line_generation/generator.pyx":68
+/* "line_generation/generator.pyx":64
+ * 
+ * 
+ * cdef int make_binary(int[:, :] matrix, int low=0, int high=1, double threshold=0):             # <<<<<<<<<<<<<<
+ *     cdef int i = 0
+ *     cdef int j = 0
+ */
+struct __pyx_opt_args_15line_generation_9generator_make_binary {
+  int __pyx_n;
+  int low;
+  int high;
+  double threshold;
+};
+
+/* "line_generation/generator.pyx":102
  * 
  * 
  * cdef (int, int) find_next_perimeter(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,             # <<<<<<<<<<<<<<
- *                                     double[:, :] x_field, double[:, :] y_field, double line_width):
- *     cdef int i = 0
+ *                                     double[:, :] x_field, double[:, :] y_field, double line_width, int* last_index,
+ *                                     str sorting):
  */
 struct __pyx_ctuple_int__and_int {
   int f0;
@@ -1454,6 +1469,56 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
+/* IncludeStringH.proto */
+#include <string.h>
+
+/* BytesEquals.proto */
+static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* UnicodeEquals.proto */
+static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* PyThreadStateGet.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
+#define __Pyx_PyThreadState_assign  __pyx_tstate = __Pyx_PyThreadState_Current;
+#define __Pyx_PyErr_Occurred()  __pyx_tstate->curexc_type
+#else
+#define __Pyx_PyThreadState_declare
+#define __Pyx_PyThreadState_assign
+#define __Pyx_PyErr_Occurred()  PyErr_Occurred()
+#endif
+
+/* PyErrFetchRestore.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyErr_Clear() __Pyx_ErrRestore(NULL, NULL, NULL)
+#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
+#if CYTHON_COMPILING_IN_CPYTHON
+#define __Pyx_PyErr_SetNone(exc) (Py_INCREF(exc), __Pyx_ErrRestore((exc), NULL, NULL))
+#else
+#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
+#endif
+#else
+#define __Pyx_PyErr_Clear() PyErr_Clear()
+#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
+#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
+#define __Pyx_ErrRestoreInState(tstate, type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetchInState(tstate, type, value, tb)  PyErr_Fetch(type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
+#endif
+
+/* WriteUnraisableException.proto */
+static void __Pyx_WriteUnraisable(const char *name, int clineno,
+                                  int lineno, const char *filename,
+                                  int full_traceback, int nogil);
+
 /* RaiseArgTupleInvalid.proto */
 static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
     Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
@@ -1621,42 +1686,6 @@ static CYTHON_INLINE int __pyx_sub_acquisition_count_locked(
 static CYTHON_INLINE void __Pyx_INC_MEMVIEW(__Pyx_memviewslice *, int, int);
 static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *, int, int);
 
-/* PyThreadStateGet.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
-#define __Pyx_PyThreadState_assign  __pyx_tstate = __Pyx_PyThreadState_Current;
-#define __Pyx_PyErr_Occurred()  __pyx_tstate->curexc_type
-#else
-#define __Pyx_PyThreadState_declare
-#define __Pyx_PyThreadState_assign
-#define __Pyx_PyErr_Occurred()  PyErr_Occurred()
-#endif
-
-/* PyErrFetchRestore.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyErr_Clear() __Pyx_ErrRestore(NULL, NULL, NULL)
-#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
-#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
-#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
-#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
-#if CYTHON_COMPILING_IN_CPYTHON
-#define __Pyx_PyErr_SetNone(exc) (Py_INCREF(exc), __Pyx_ErrRestore((exc), NULL, NULL))
-#else
-#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
-#endif
-#else
-#define __Pyx_PyErr_Clear() PyErr_Clear()
-#define __Pyx_PyErr_SetNone(exc) PyErr_SetNone(exc)
-#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
-#define __Pyx_ErrRestoreInState(tstate, type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetchInState(tstate, type, value, tb)  PyErr_Fetch(type, value, tb)
-#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
-#endif
-
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
 
@@ -1714,15 +1743,6 @@ static int __Pyx__GetException(PyThreadState *tstate, PyObject **type, PyObject 
 #else
 static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb);
 #endif
-
-/* IncludeStringH.proto */
-#include <string.h>
-
-/* BytesEquals.proto */
-static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* UnicodeEquals.proto */
-static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
 
 /* StrEquals.proto */
 #if PY_MAJOR_VERSION >= 3
@@ -1978,6 +1998,9 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 /* None.proto */
 static CYTHON_INLINE long __Pyx_pow_long(long, long);
 
+/* None.proto */
+static CYTHON_INLINE int __Pyx_pow_int(int, int);
+
 /* MemviewDtypeToObject.proto */
 static CYTHON_INLINE PyObject *__pyx_memview_get_int(const char *itemp);
 static CYTHON_INLINE int __pyx_memview_set_int(const char *itemp, PyObject *obj);
@@ -2183,8 +2206,9 @@ static int __pyx_v_15line_generation_9generator_MIN_SEGMENT_NUMBER;
 static double __pyx_v_15line_generation_9generator_ANGLE_THRESHOLD;
 static double __pyx_v_15line_generation_9generator_MIN_DISTANCE_COEFFICIENT;
 static double __pyx_v_15line_generation_9generator_NEW_LINE_SEPARATION;
-static double __pyx_v_15line_generation_9generator_MIN_LINE_SEPARATION;
 static int __pyx_v_15line_generation_9generator_NEIGHBOUR_THRESHOLD;
+static int __pyx_v_15line_generation_9generator_LOG_BASES[7];
+static int __pyx_v_15line_generation_9generator_LOG_BASES_SIZE;
 static PyObject *generic = 0;
 static PyObject *strided = 0;
 static PyObject *indirect = 0;
@@ -2197,13 +2221,15 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_norm
 static int __pyx_f_15line_generation_9generator_check_index(int, int, int, int); /*proto*/
 static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewslice, double, int, int, struct __pyx_opt_args_15line_generation_9generator_check_proximity *__pyx_optional_args); /*proto*/
 static int __pyx_f_15line_generation_9generator_check_nearest_neighbours(int, int, __Pyx_memviewslice); /*proto*/
-static int __pyx_f_15line_generation_9generator_normalize_matrix(__Pyx_memviewslice); /*proto*/
-static __pyx_ctuple_int__and_int __pyx_f_15line_generation_9generator_find_next_perimeter(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double); /*proto*/
+static int __pyx_f_15line_generation_9generator_make_binary(__Pyx_memviewslice, struct __pyx_opt_args_15line_generation_9generator_make_binary *__pyx_optional_args); /*proto*/
+static double __pyx_f_15line_generation_9generator_decimal_part(double); /*proto*/
+static int __pyx_f_15line_generation_9generator_index_generator(int, int); /*proto*/
+static __pyx_ctuple_int__and_int __pyx_f_15line_generation_9generator_find_next_perimeter(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double, int *, PyObject *); /*proto*/
 static double __pyx_f_15line_generation_9generator_bilinear_interpolation(__Pyx_memviewslice, double, double); /*proto*/
 static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calculate_next_move(double, double, double, double, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
 static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double, double, __Pyx_memviewslice, double, int, int); /*proto*/
-static int __pyx_f_15line_generation_9generator_check_moving_forward(double, double, double, double, __Pyx_memviewslice, double, double); /*proto*/
-static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_line(double, double, double, double, double, double, double, __Pyx_memviewslice); /*proto*/
+static int __pyx_f_15line_generation_9generator_check_moving_forward(double, double, double, double, __Pyx_memviewslice, double, double, double); /*proto*/
+static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_line(double, double, double, double, double, double, double, __Pyx_memviewslice, double); /*proto*/
 static int __pyx_f_15line_generation_9generator_update_empty_elements(__Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
@@ -2306,6 +2332,7 @@ static const char __pyx_k_Printer[] = "Printer";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
 static const char __pyx_k_printer[] = "printer";
+static const char __pyx_k_sorting[] = "sorting";
 static const char __pyx_k_x_field[] = "x_field";
 static const char __pyx_k_x_start[] = "x_start";
 static const char __pyx_k_y_field[] = "y_field";
@@ -2316,6 +2343,7 @@ static const char __pyx_k_cx_field[] = "cx_field";
 static const char __pyx_k_cy_field[] = "cy_field";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_itemsize[] = "itemsize";
+static const char __pyx_k_opposite[] = "opposite";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_setstate[] = "__setstate__";
 static const char __pyx_k_TypeError[] = "TypeError";
@@ -2326,6 +2354,7 @@ static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_cperimeter[] = "cperimeter";
+static const char __pyx_k_last_index[] = "last_index";
 static const char __pyx_k_line_width[] = "line_width";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
@@ -2333,6 +2362,7 @@ static const char __pyx_k_zeros_like[] = "zeros_like";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_PickleError[] = "PickleError";
+static const char __pyx_k_consecutive[] = "consecutive";
 static const char __pyx_k_RuntimeError[] = "RuntimeError";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_stringsource[] = "stringsource";
@@ -2351,6 +2381,7 @@ static const char __pyx_k_matplotlib_pyplot[] = "matplotlib.pyplot";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
+static const char __pyx_k_min_line_separation[] = "min_line_separation";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
 static const char __pyx_k_MemoryView_of_r_object[] = "<MemoryView of %r object>";
@@ -2422,6 +2453,7 @@ static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
 static PyObject *__pyx_n_s_class;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_u_consecutive;
 static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
 static PyObject *__pyx_n_s_cperimeter;
@@ -2447,12 +2479,14 @@ static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_imshow;
 static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
+static PyObject *__pyx_n_s_last_index;
 static PyObject *__pyx_n_s_line_generation_generator;
 static PyObject *__pyx_kp_s_line_generation_generator_pyx;
 static PyObject *__pyx_n_s_line_width;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_matplotlib_pyplot;
 static PyObject *__pyx_n_s_memview;
+static PyObject *__pyx_n_s_min_line_separation;
 static PyObject *__pyx_n_s_mode;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_name_2;
@@ -2467,6 +2501,7 @@ static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_kp_u_numpy_core_multiarray_failed_to;
 static PyObject *__pyx_kp_u_numpy_core_umath_failed_to_impor;
 static PyObject *__pyx_n_s_obj;
+static PyObject *__pyx_n_u_opposite;
 static PyObject *__pyx_n_s_pack;
 static PyObject *__pyx_n_s_perimeter;
 static PyObject *__pyx_n_s_pickle;
@@ -2490,6 +2525,7 @@ static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_shape;
 static PyObject *__pyx_n_s_show;
 static PyObject *__pyx_n_s_size;
+static PyObject *__pyx_n_s_sorting;
 static PyObject *__pyx_n_s_start;
 static PyObject *__pyx_n_s_step;
 static PyObject *__pyx_n_s_stop;
@@ -2517,7 +2553,7 @@ static PyObject *__pyx_n_s_y_pos;
 static PyObject *__pyx_n_s_y_size;
 static PyObject *__pyx_n_s_y_start;
 static PyObject *__pyx_n_s_zeros_like;
-static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x_field, PyArrayObject *__pyx_v_y_field, PyArrayObject *__pyx_v_desired_shape, PyArrayObject *__pyx_v_perimeter, PyObject *__pyx_v_printer); /* proto */
+static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x_field, PyArrayObject *__pyx_v_y_field, PyArrayObject *__pyx_v_desired_shape, PyArrayObject *__pyx_v_perimeter, PyObject *__pyx_v_printer, double __pyx_v_min_line_separation, PyObject *__pyx_v_sorting); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
@@ -2606,10 +2642,10 @@ static PyObject *__pyx_codeobj__28;
 static PyObject *__pyx_codeobj__35;
 /* Late includes */
 
-/* "line_generation/generator.pyx":20
- * cdef int NEIGHBOUR_THRESHOLD = 1
+/* "line_generation/generator.pyx":25
+ * #TODO make automatic prime number generator for slicing
  * 
- * cdef double norm(double a, double b) nogil:             # <<<<<<<<<<<<<<
+ * cdef double norm(double a, double b):             # <<<<<<<<<<<<<<
  *     cdef double result = sqrt(a ** 2 + b ** 2)
  *     return result
  */
@@ -2617,18 +2653,20 @@ static PyObject *__pyx_codeobj__35;
 static double __pyx_f_15line_generation_9generator_norm(double __pyx_v_a, double __pyx_v_b) {
   double __pyx_v_result;
   double __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("norm", 0);
 
-  /* "line_generation/generator.pyx":21
+  /* "line_generation/generator.pyx":26
  * 
- * cdef double norm(double a, double b) nogil:
+ * cdef double norm(double a, double b):
  *     cdef double result = sqrt(a ** 2 + b ** 2)             # <<<<<<<<<<<<<<
  *     return result
  * 
  */
   __pyx_v_result = sqrt((pow(__pyx_v_a, 2.0) + pow(__pyx_v_b, 2.0)));
 
-  /* "line_generation/generator.pyx":22
- * cdef double norm(double a, double b) nogil:
+  /* "line_generation/generator.pyx":27
+ * cdef double norm(double a, double b):
  *     cdef double result = sqrt(a ** 2 + b ** 2)
  *     return result             # <<<<<<<<<<<<<<
  * 
@@ -2637,57 +2675,91 @@ static double __pyx_f_15line_generation_9generator_norm(double __pyx_v_a, double
   __pyx_r = __pyx_v_result;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":20
- * cdef int NEIGHBOUR_THRESHOLD = 1
+  /* "line_generation/generator.pyx":25
+ * #TODO make automatic prime number generator for slicing
  * 
- * cdef double norm(double a, double b) nogil:             # <<<<<<<<<<<<<<
+ * cdef double norm(double a, double b):             # <<<<<<<<<<<<<<
  *     cdef double result = sqrt(a ** 2 + b ** 2)
  *     return result
  */
 
   /* function exit code */
   __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":25
+/* "line_generation/generator.pyx":30
  * 
  * 
- * cdef (double, double) normalize(double a, double b) nogil:             # <<<<<<<<<<<<<<
- *     return a / norm(a, b), b / norm(a, b)
- * 
+ * cdef (double, double) normalize(double a, double b):             # <<<<<<<<<<<<<<
+ *     cdef double normalization_factor = norm(a, b)
+ *     cdef double a_normalized = a / normalization_factor
  */
 
 static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_normalize(double __pyx_v_a, double __pyx_v_b) {
+  double __pyx_v_normalization_factor;
+  double __pyx_v_a_normalized;
+  double __pyx_v_b_normalized;
   __pyx_ctuple_double__and_double __pyx_r;
+  __Pyx_RefNannyDeclarations
   __pyx_ctuple_double__and_double __pyx_t_1;
+  __Pyx_RefNannySetupContext("normalize", 0);
 
-  /* "line_generation/generator.pyx":26
+  /* "line_generation/generator.pyx":31
  * 
- * cdef (double, double) normalize(double a, double b) nogil:
- *     return a / norm(a, b), b / norm(a, b)             # <<<<<<<<<<<<<<
+ * cdef (double, double) normalize(double a, double b):
+ *     cdef double normalization_factor = norm(a, b)             # <<<<<<<<<<<<<<
+ *     cdef double a_normalized = a / normalization_factor
+ *     cdef double b_normalized = b / normalization_factor
+ */
+  __pyx_v_normalization_factor = __pyx_f_15line_generation_9generator_norm(__pyx_v_a, __pyx_v_b);
+
+  /* "line_generation/generator.pyx":32
+ * cdef (double, double) normalize(double a, double b):
+ *     cdef double normalization_factor = norm(a, b)
+ *     cdef double a_normalized = a / normalization_factor             # <<<<<<<<<<<<<<
+ *     cdef double b_normalized = b / normalization_factor
+ *     return a_normalized, b_normalized
+ */
+  __pyx_v_a_normalized = (__pyx_v_a / __pyx_v_normalization_factor);
+
+  /* "line_generation/generator.pyx":33
+ *     cdef double normalization_factor = norm(a, b)
+ *     cdef double a_normalized = a / normalization_factor
+ *     cdef double b_normalized = b / normalization_factor             # <<<<<<<<<<<<<<
+ *     return a_normalized, b_normalized
+ * 
+ */
+  __pyx_v_b_normalized = (__pyx_v_b / __pyx_v_normalization_factor);
+
+  /* "line_generation/generator.pyx":34
+ *     cdef double a_normalized = a / normalization_factor
+ *     cdef double b_normalized = b / normalization_factor
+ *     return a_normalized, b_normalized             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1.f0 = (__pyx_v_a / __pyx_f_15line_generation_9generator_norm(__pyx_v_a, __pyx_v_b));
-  __pyx_t_1.f1 = (__pyx_v_b / __pyx_f_15line_generation_9generator_norm(__pyx_v_a, __pyx_v_b));
+  __pyx_t_1.f0 = __pyx_v_a_normalized;
+  __pyx_t_1.f1 = __pyx_v_b_normalized;
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":25
+  /* "line_generation/generator.pyx":30
  * 
  * 
- * cdef (double, double) normalize(double a, double b) nogil:             # <<<<<<<<<<<<<<
- *     return a / norm(a, b), b / norm(a, b)
- * 
+ * cdef (double, double) normalize(double a, double b):             # <<<<<<<<<<<<<<
+ *     cdef double normalization_factor = norm(a, b)
+ *     cdef double a_normalized = a / normalization_factor
  */
 
   /* function exit code */
   __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":29
+/* "line_generation/generator.pyx":37
  * 
  * 
  * cdef int check_index(int x_size, int y_size, int x, int y):             # <<<<<<<<<<<<<<
@@ -2703,7 +2775,7 @@ static int __pyx_f_15line_generation_9generator_check_index(int __pyx_v_x_size, 
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("check_index", 0);
 
-  /* "line_generation/generator.pyx":30
+  /* "line_generation/generator.pyx":38
  * 
  * cdef int check_index(int x_size, int y_size, int x, int y):
  *     if 0 <= x < x_size and 0 <= y < y_size:             # <<<<<<<<<<<<<<
@@ -2729,7 +2801,7 @@ static int __pyx_f_15line_generation_9generator_check_index(int __pyx_v_x_size, 
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "line_generation/generator.pyx":31
+    /* "line_generation/generator.pyx":39
  * cdef int check_index(int x_size, int y_size, int x, int y):
  *     if 0 <= x < x_size and 0 <= y < y_size:
  *         return 1             # <<<<<<<<<<<<<<
@@ -2739,7 +2811,7 @@ static int __pyx_f_15line_generation_9generator_check_index(int __pyx_v_x_size, 
     __pyx_r = 1;
     goto __pyx_L0;
 
-    /* "line_generation/generator.pyx":30
+    /* "line_generation/generator.pyx":38
  * 
  * cdef int check_index(int x_size, int y_size, int x, int y):
  *     if 0 <= x < x_size and 0 <= y < y_size:             # <<<<<<<<<<<<<<
@@ -2748,7 +2820,7 @@ static int __pyx_f_15line_generation_9generator_check_index(int __pyx_v_x_size, 
  */
   }
 
-  /* "line_generation/generator.pyx":33
+  /* "line_generation/generator.pyx":41
  *         return 1
  *     else:
  *         return 0             # <<<<<<<<<<<<<<
@@ -2760,7 +2832,7 @@ static int __pyx_f_15line_generation_9generator_check_index(int __pyx_v_x_size, 
     goto __pyx_L0;
   }
 
-  /* "line_generation/generator.pyx":29
+  /* "line_generation/generator.pyx":37
  * 
  * 
  * cdef int check_index(int x_size, int y_size, int x, int y):             # <<<<<<<<<<<<<<
@@ -2774,7 +2846,7 @@ static int __pyx_f_15line_generation_9generator_check_index(int __pyx_v_x_size, 
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":36
+/* "line_generation/generator.pyx":44
  * 
  * 
  * cdef int check_proximity(int[:, :] filled_elements, double distance, int x, int y, double sign=1, double threshold=0):             # <<<<<<<<<<<<<<
@@ -2810,7 +2882,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
     }
   }
 
-  /* "line_generation/generator.pyx":37
+  /* "line_generation/generator.pyx":45
  * 
  * cdef int check_proximity(int[:, :] filled_elements, double distance, int x, int y, double sign=1, double threshold=0):
  *     cdef int limit = <int>ceil(distance)             # <<<<<<<<<<<<<<
@@ -2819,7 +2891,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
  */
   __pyx_v_limit = ((int)ceil(__pyx_v_distance));
 
-  /* "line_generation/generator.pyx":38
+  /* "line_generation/generator.pyx":46
  * cdef int check_proximity(int[:, :] filled_elements, double distance, int x, int y, double sign=1, double threshold=0):
  *     cdef int limit = <int>ceil(distance)
  *     cdef int i = 0             # <<<<<<<<<<<<<<
@@ -2828,7 +2900,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
  */
   __pyx_v_i = 0;
 
-  /* "line_generation/generator.pyx":39
+  /* "line_generation/generator.pyx":47
  *     cdef int limit = <int>ceil(distance)
  *     cdef int i = 0
  *     cdef int j = 0             # <<<<<<<<<<<<<<
@@ -2837,7 +2909,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
  */
   __pyx_v_j = 0;
 
-  /* "line_generation/generator.pyx":40
+  /* "line_generation/generator.pyx":48
  *     cdef int i = 0
  *     cdef int j = 0
  *     for i in range(-limit, limit):             # <<<<<<<<<<<<<<
@@ -2849,7 +2921,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
   for (__pyx_t_3 = (-__pyx_v_limit); __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "line_generation/generator.pyx":41
+    /* "line_generation/generator.pyx":49
  *     cdef int j = 0
  *     for i in range(-limit, limit):
  *         for j in range(-limit, limit):             # <<<<<<<<<<<<<<
@@ -2861,7 +2933,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
     for (__pyx_t_6 = (-__pyx_v_limit); __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "line_generation/generator.pyx":42
+      /* "line_generation/generator.pyx":50
  *     for i in range(-limit, limit):
  *         for j in range(-limit, limit):
  *             if check_index(filled_elements.shape[0], filled_elements.shape[1], x + i, y + j) and i ** 2 + j ** 2 < distance ** 2:             # <<<<<<<<<<<<<<
@@ -2879,7 +2951,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
       __pyx_L8_bool_binop_done:;
       if (__pyx_t_7) {
 
-        /* "line_generation/generator.pyx":43
+        /* "line_generation/generator.pyx":51
  *         for j in range(-limit, limit):
  *             if check_index(filled_elements.shape[0], filled_elements.shape[1], x + i, y + j) and i ** 2 + j ** 2 < distance ** 2:
  *                 if sign * filled_elements[x + i, y + j] > threshold:             # <<<<<<<<<<<<<<
@@ -2891,7 +2963,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
         __pyx_t_7 = (((__pyx_v_sign * (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_filled_elements.data + __pyx_t_9 * __pyx_v_filled_elements.strides[0]) ) + __pyx_t_10 * __pyx_v_filled_elements.strides[1]) )))) > __pyx_v_threshold) != 0);
         if (__pyx_t_7) {
 
-          /* "line_generation/generator.pyx":44
+          /* "line_generation/generator.pyx":52
  *             if check_index(filled_elements.shape[0], filled_elements.shape[1], x + i, y + j) and i ** 2 + j ** 2 < distance ** 2:
  *                 if sign * filled_elements[x + i, y + j] > threshold:
  *                     return 0             # <<<<<<<<<<<<<<
@@ -2901,7 +2973,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
           __pyx_r = 0;
           goto __pyx_L0;
 
-          /* "line_generation/generator.pyx":43
+          /* "line_generation/generator.pyx":51
  *         for j in range(-limit, limit):
  *             if check_index(filled_elements.shape[0], filled_elements.shape[1], x + i, y + j) and i ** 2 + j ** 2 < distance ** 2:
  *                 if sign * filled_elements[x + i, y + j] > threshold:             # <<<<<<<<<<<<<<
@@ -2910,7 +2982,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
  */
         }
 
-        /* "line_generation/generator.pyx":42
+        /* "line_generation/generator.pyx":50
  *     for i in range(-limit, limit):
  *         for j in range(-limit, limit):
  *             if check_index(filled_elements.shape[0], filled_elements.shape[1], x + i, y + j) and i ** 2 + j ** 2 < distance ** 2:             # <<<<<<<<<<<<<<
@@ -2921,7 +2993,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
     }
   }
 
-  /* "line_generation/generator.pyx":45
+  /* "line_generation/generator.pyx":53
  *                 if sign * filled_elements[x + i, y + j] > threshold:
  *                     return 0
  *     return 1             # <<<<<<<<<<<<<<
@@ -2931,7 +3003,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":36
+  /* "line_generation/generator.pyx":44
  * 
  * 
  * cdef int check_proximity(int[:, :] filled_elements, double distance, int x, int y, double sign=1, double threshold=0):             # <<<<<<<<<<<<<<
@@ -2945,7 +3017,7 @@ static int __pyx_f_15line_generation_9generator_check_proximity(__Pyx_memviewsli
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":48
+/* "line_generation/generator.pyx":56
  * 
  * 
  * cdef int check_nearest_neighbours(int x_lower, int y_lower, int[:, :] empty_elements):             # <<<<<<<<<<<<<<
@@ -2970,7 +3042,7 @@ static int __pyx_f_15line_generation_9generator_check_nearest_neighbours(int __p
   Py_ssize_t __pyx_t_8;
   __Pyx_RefNannySetupContext("check_nearest_neighbours", 0);
 
-  /* "line_generation/generator.pyx":49
+  /* "line_generation/generator.pyx":57
  * 
  * cdef int check_nearest_neighbours(int x_lower, int y_lower, int[:, :] empty_elements):
  *     cdef int up_left = empty_elements[x_lower, y_lower + 1]             # <<<<<<<<<<<<<<
@@ -2981,7 +3053,7 @@ static int __pyx_f_15line_generation_9generator_check_nearest_neighbours(int __p
   __pyx_t_2 = (__pyx_v_y_lower + 1);
   __pyx_v_up_left = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_1 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_2 * __pyx_v_empty_elements.strides[1]) )));
 
-  /* "line_generation/generator.pyx":50
+  /* "line_generation/generator.pyx":58
  * cdef int check_nearest_neighbours(int x_lower, int y_lower, int[:, :] empty_elements):
  *     cdef int up_left = empty_elements[x_lower, y_lower + 1]
  *     cdef int up_right = empty_elements[x_lower + 1, y_lower + 1]             # <<<<<<<<<<<<<<
@@ -2992,7 +3064,7 @@ static int __pyx_f_15line_generation_9generator_check_nearest_neighbours(int __p
   __pyx_t_4 = (__pyx_v_y_lower + 1);
   __pyx_v_up_right = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_3 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_4 * __pyx_v_empty_elements.strides[1]) )));
 
-  /* "line_generation/generator.pyx":51
+  /* "line_generation/generator.pyx":59
  *     cdef int up_left = empty_elements[x_lower, y_lower + 1]
  *     cdef int up_right = empty_elements[x_lower + 1, y_lower + 1]
  *     cdef int down_left = empty_elements[x_lower, y_lower]             # <<<<<<<<<<<<<<
@@ -3003,7 +3075,7 @@ static int __pyx_f_15line_generation_9generator_check_nearest_neighbours(int __p
   __pyx_t_6 = __pyx_v_y_lower;
   __pyx_v_down_left = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_5 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_6 * __pyx_v_empty_elements.strides[1]) )));
 
-  /* "line_generation/generator.pyx":52
+  /* "line_generation/generator.pyx":60
  *     cdef int up_right = empty_elements[x_lower + 1, y_lower + 1]
  *     cdef int down_left = empty_elements[x_lower, y_lower]
  *     cdef int down_right = empty_elements[x_lower + 1, y_lower]             # <<<<<<<<<<<<<<
@@ -3014,7 +3086,7 @@ static int __pyx_f_15line_generation_9generator_check_nearest_neighbours(int __p
   __pyx_t_8 = __pyx_v_y_lower;
   __pyx_v_down_right = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_7 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_8 * __pyx_v_empty_elements.strides[1]) )));
 
-  /* "line_generation/generator.pyx":53
+  /* "line_generation/generator.pyx":61
  *     cdef int down_left = empty_elements[x_lower, y_lower]
  *     cdef int down_right = empty_elements[x_lower + 1, y_lower]
  *     return up_left + up_right + down_left + down_right             # <<<<<<<<<<<<<<
@@ -3024,7 +3096,7 @@ static int __pyx_f_15line_generation_9generator_check_nearest_neighbours(int __p
   __pyx_r = (((__pyx_v_up_left + __pyx_v_up_right) + __pyx_v_down_left) + __pyx_v_down_right);
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":48
+  /* "line_generation/generator.pyx":56
  * 
  * 
  * cdef int check_nearest_neighbours(int x_lower, int y_lower, int[:, :] empty_elements):             # <<<<<<<<<<<<<<
@@ -3038,15 +3110,18 @@ static int __pyx_f_15line_generation_9generator_check_nearest_neighbours(int __p
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":56
+/* "line_generation/generator.pyx":64
  * 
  * 
- * cdef int normalize_matrix(int[:, :] matrix):             # <<<<<<<<<<<<<<
+ * cdef int make_binary(int[:, :] matrix, int low=0, int high=1, double threshold=0):             # <<<<<<<<<<<<<<
  *     cdef int i = 0
  *     cdef int j = 0
  */
 
-static int __pyx_f_15line_generation_9generator_normalize_matrix(__Pyx_memviewslice __pyx_v_matrix) {
+static int __pyx_f_15line_generation_9generator_make_binary(__Pyx_memviewslice __pyx_v_matrix, struct __pyx_opt_args_15line_generation_9generator_make_binary *__pyx_optional_args) {
+  int __pyx_v_low = ((int)0);
+  int __pyx_v_high = ((int)1);
+  double __pyx_v_threshold = ((double)0.0);
   int __pyx_v_i;
   int __pyx_v_j;
   int __pyx_r;
@@ -3064,19 +3139,30 @@ static int __pyx_f_15line_generation_9generator_normalize_matrix(__Pyx_memviewsl
   Py_ssize_t __pyx_t_11;
   Py_ssize_t __pyx_t_12;
   Py_ssize_t __pyx_t_13;
-  __Pyx_RefNannySetupContext("normalize_matrix", 0);
+  __Pyx_RefNannySetupContext("make_binary", 0);
+  if (__pyx_optional_args) {
+    if (__pyx_optional_args->__pyx_n > 0) {
+      __pyx_v_low = __pyx_optional_args->low;
+      if (__pyx_optional_args->__pyx_n > 1) {
+        __pyx_v_high = __pyx_optional_args->high;
+        if (__pyx_optional_args->__pyx_n > 2) {
+          __pyx_v_threshold = __pyx_optional_args->threshold;
+        }
+      }
+    }
+  }
 
-  /* "line_generation/generator.pyx":57
+  /* "line_generation/generator.pyx":65
  * 
- * cdef int normalize_matrix(int[:, :] matrix):
+ * cdef int make_binary(int[:, :] matrix, int low=0, int high=1, double threshold=0):
  *     cdef int i = 0             # <<<<<<<<<<<<<<
  *     cdef int j = 0
  *     for i in range(matrix.shape[0]):
  */
   __pyx_v_i = 0;
 
-  /* "line_generation/generator.pyx":58
- * cdef int normalize_matrix(int[:, :] matrix):
+  /* "line_generation/generator.pyx":66
+ * cdef int make_binary(int[:, :] matrix, int low=0, int high=1, double threshold=0):
  *     cdef int i = 0
  *     cdef int j = 0             # <<<<<<<<<<<<<<
  *     for i in range(matrix.shape[0]):
@@ -3084,82 +3170,82 @@ static int __pyx_f_15line_generation_9generator_normalize_matrix(__Pyx_memviewsl
  */
   __pyx_v_j = 0;
 
-  /* "line_generation/generator.pyx":59
+  /* "line_generation/generator.pyx":67
  *     cdef int i = 0
  *     cdef int j = 0
  *     for i in range(matrix.shape[0]):             # <<<<<<<<<<<<<<
  *         for j in range(matrix.shape[1]):
- *             if matrix[i, j] > 0:
+ *             if matrix[i, j] > threshold:
  */
   __pyx_t_1 = (__pyx_v_matrix.shape[0]);
   __pyx_t_2 = __pyx_t_1;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "line_generation/generator.pyx":60
+    /* "line_generation/generator.pyx":68
  *     cdef int j = 0
  *     for i in range(matrix.shape[0]):
  *         for j in range(matrix.shape[1]):             # <<<<<<<<<<<<<<
- *             if matrix[i, j] > 0:
- *                 matrix[i, j] = 1
+ *             if matrix[i, j] > threshold:
+ *                 matrix[i, j] = high
  */
     __pyx_t_4 = (__pyx_v_matrix.shape[1]);
     __pyx_t_5 = __pyx_t_4;
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "line_generation/generator.pyx":61
+      /* "line_generation/generator.pyx":69
  *     for i in range(matrix.shape[0]):
  *         for j in range(matrix.shape[1]):
- *             if matrix[i, j] > 0:             # <<<<<<<<<<<<<<
- *                 matrix[i, j] = 1
+ *             if matrix[i, j] > threshold:             # <<<<<<<<<<<<<<
+ *                 matrix[i, j] = high
  *             else:
  */
       __pyx_t_7 = __pyx_v_i;
       __pyx_t_8 = __pyx_v_j;
-      __pyx_t_9 = (((*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_matrix.data + __pyx_t_7 * __pyx_v_matrix.strides[0]) ) + __pyx_t_8 * __pyx_v_matrix.strides[1]) ))) > 0) != 0);
+      __pyx_t_9 = (((*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_matrix.data + __pyx_t_7 * __pyx_v_matrix.strides[0]) ) + __pyx_t_8 * __pyx_v_matrix.strides[1]) ))) > __pyx_v_threshold) != 0);
       if (__pyx_t_9) {
 
-        /* "line_generation/generator.pyx":62
+        /* "line_generation/generator.pyx":70
  *         for j in range(matrix.shape[1]):
- *             if matrix[i, j] > 0:
- *                 matrix[i, j] = 1             # <<<<<<<<<<<<<<
+ *             if matrix[i, j] > threshold:
+ *                 matrix[i, j] = high             # <<<<<<<<<<<<<<
  *             else:
- *                 matrix[i, j] = 0
+ *                 matrix[i, j] = low
  */
         __pyx_t_10 = __pyx_v_i;
         __pyx_t_11 = __pyx_v_j;
-        *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_matrix.data + __pyx_t_10 * __pyx_v_matrix.strides[0]) ) + __pyx_t_11 * __pyx_v_matrix.strides[1]) )) = 1;
+        *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_matrix.data + __pyx_t_10 * __pyx_v_matrix.strides[0]) ) + __pyx_t_11 * __pyx_v_matrix.strides[1]) )) = __pyx_v_high;
 
-        /* "line_generation/generator.pyx":61
+        /* "line_generation/generator.pyx":69
  *     for i in range(matrix.shape[0]):
  *         for j in range(matrix.shape[1]):
- *             if matrix[i, j] > 0:             # <<<<<<<<<<<<<<
- *                 matrix[i, j] = 1
+ *             if matrix[i, j] > threshold:             # <<<<<<<<<<<<<<
+ *                 matrix[i, j] = high
  *             else:
  */
         goto __pyx_L7;
       }
 
-      /* "line_generation/generator.pyx":64
- *                 matrix[i, j] = 1
+      /* "line_generation/generator.pyx":72
+ *                 matrix[i, j] = high
  *             else:
- *                 matrix[i, j] = 0             # <<<<<<<<<<<<<<
+ *                 matrix[i, j] = low             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
       /*else*/ {
         __pyx_t_12 = __pyx_v_i;
         __pyx_t_13 = __pyx_v_j;
-        *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_matrix.data + __pyx_t_12 * __pyx_v_matrix.strides[0]) ) + __pyx_t_13 * __pyx_v_matrix.strides[1]) )) = 0;
+        *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_matrix.data + __pyx_t_12 * __pyx_v_matrix.strides[0]) ) + __pyx_t_13 * __pyx_v_matrix.strides[1]) )) = __pyx_v_low;
       }
       __pyx_L7:;
     }
   }
 
-  /* "line_generation/generator.pyx":65
+  /* "line_generation/generator.pyx":73
  *             else:
- *                 matrix[i, j] = 0
+ *                 matrix[i, j] = low
  *     return 0             # <<<<<<<<<<<<<<
  * 
  * 
@@ -3167,10 +3253,10 @@ static int __pyx_f_15line_generation_9generator_normalize_matrix(__Pyx_memviewsl
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":56
+  /* "line_generation/generator.pyx":64
  * 
  * 
- * cdef int normalize_matrix(int[:, :] matrix):             # <<<<<<<<<<<<<<
+ * cdef int make_binary(int[:, :] matrix, int low=0, int high=1, double threshold=0):             # <<<<<<<<<<<<<<
  *     cdef int i = 0
  *     cdef int j = 0
  */
@@ -3181,29 +3267,270 @@ static int __pyx_f_15line_generation_9generator_normalize_matrix(__Pyx_memviewsl
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":68
+/* "line_generation/generator.pyx":76
+ * 
+ * 
+ * cdef double decimal_part(double val):             # <<<<<<<<<<<<<<
+ *     return val - <int>val
+ * 
+ */
+
+static double __pyx_f_15line_generation_9generator_decimal_part(double __pyx_v_val) {
+  double __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("decimal_part", 0);
+
+  /* "line_generation/generator.pyx":77
+ * 
+ * cdef double decimal_part(double val):
+ *     return val - <int>val             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = (__pyx_v_val - ((int)__pyx_v_val));
+  goto __pyx_L0;
+
+  /* "line_generation/generator.pyx":76
+ * 
+ * 
+ * cdef double decimal_part(double val):             # <<<<<<<<<<<<<<
+ *     return val - <int>val
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "line_generation/generator.pyx":80
+ * 
+ * 
+ * cdef int index_generator(int i, int size):             # <<<<<<<<<<<<<<
+ *     cdef int base = 0
+ *     cdef int exponent = 0
+ */
+
+static int __pyx_f_15line_generation_9generator_index_generator(int __pyx_v_i, int __pyx_v_size) {
+  int __pyx_v_base;
+  int __pyx_v_exponent;
+  double __pyx_v_closeness;
+  int __pyx_v_j;
+  int __pyx_v_current_base;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  int __pyx_t_3;
+  int __pyx_t_4;
+  __Pyx_RefNannySetupContext("index_generator", 0);
+
+  /* "line_generation/generator.pyx":81
+ * 
+ * cdef int index_generator(int i, int size):
+ *     cdef int base = 0             # <<<<<<<<<<<<<<
+ *     cdef int exponent = 0
+ *     cdef double closeness = 1
+ */
+  __pyx_v_base = 0;
+
+  /* "line_generation/generator.pyx":82
+ * cdef int index_generator(int i, int size):
+ *     cdef int base = 0
+ *     cdef int exponent = 0             # <<<<<<<<<<<<<<
+ *     cdef double closeness = 1
+ *     cdef int j = 0
+ */
+  __pyx_v_exponent = 0;
+
+  /* "line_generation/generator.pyx":83
+ *     cdef int base = 0
+ *     cdef int exponent = 0
+ *     cdef double closeness = 1             # <<<<<<<<<<<<<<
+ *     cdef int j = 0
+ *     cdef int current_base = 0
+ */
+  __pyx_v_closeness = 1.0;
+
+  /* "line_generation/generator.pyx":84
+ *     cdef int exponent = 0
+ *     cdef double closeness = 1
+ *     cdef int j = 0             # <<<<<<<<<<<<<<
+ *     cdef int current_base = 0
+ *     size -= 1
+ */
+  __pyx_v_j = 0;
+
+  /* "line_generation/generator.pyx":85
+ *     cdef double closeness = 1
+ *     cdef int j = 0
+ *     cdef int current_base = 0             # <<<<<<<<<<<<<<
+ *     size -= 1
+ * 
+ */
+  __pyx_v_current_base = 0;
+
+  /* "line_generation/generator.pyx":86
+ *     cdef int j = 0
+ *     cdef int current_base = 0
+ *     size -= 1             # <<<<<<<<<<<<<<
+ * 
+ *     #TODO optimize the python out of here
+ */
+  __pyx_v_size = (__pyx_v_size - 1);
+
+  /* "line_generation/generator.pyx":89
+ * 
+ *     #TODO optimize the python out of here
+ *     for j in range(LOG_BASES_SIZE): #[2, 3, 5, 7, 11, 13, 17]:             # <<<<<<<<<<<<<<
+ *         current_base = LOG_BASES[j]
+ *         if decimal_part(log(size) / log(current_base)) < closeness:
+ */
+  __pyx_t_1 = __pyx_v_15line_generation_9generator_LOG_BASES_SIZE;
+  __pyx_t_2 = __pyx_t_1;
+  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
+    __pyx_v_j = __pyx_t_3;
+
+    /* "line_generation/generator.pyx":90
+ *     #TODO optimize the python out of here
+ *     for j in range(LOG_BASES_SIZE): #[2, 3, 5, 7, 11, 13, 17]:
+ *         current_base = LOG_BASES[j]             # <<<<<<<<<<<<<<
+ *         if decimal_part(log(size) / log(current_base)) < closeness:
+ *             closeness = decimal_part(log(size) / log(current_base))
+ */
+    __pyx_v_current_base = (__pyx_v_15line_generation_9generator_LOG_BASES[__pyx_v_j]);
+
+    /* "line_generation/generator.pyx":91
+ *     for j in range(LOG_BASES_SIZE): #[2, 3, 5, 7, 11, 13, 17]:
+ *         current_base = LOG_BASES[j]
+ *         if decimal_part(log(size) / log(current_base)) < closeness:             # <<<<<<<<<<<<<<
+ *             closeness = decimal_part(log(size) / log(current_base))
+ *             base = current_base
+ */
+    __pyx_t_4 = ((__pyx_f_15line_generation_9generator_decimal_part((log(__pyx_v_size) / log(__pyx_v_current_base))) < __pyx_v_closeness) != 0);
+    if (__pyx_t_4) {
+
+      /* "line_generation/generator.pyx":92
+ *         current_base = LOG_BASES[j]
+ *         if decimal_part(log(size) / log(current_base)) < closeness:
+ *             closeness = decimal_part(log(size) / log(current_base))             # <<<<<<<<<<<<<<
+ *             base = current_base
+ *     base = 2
+ */
+      __pyx_v_closeness = __pyx_f_15line_generation_9generator_decimal_part((log(__pyx_v_size) / log(__pyx_v_current_base)));
+
+      /* "line_generation/generator.pyx":93
+ *         if decimal_part(log(size) / log(current_base)) < closeness:
+ *             closeness = decimal_part(log(size) / log(current_base))
+ *             base = current_base             # <<<<<<<<<<<<<<
+ *     base = 2
+ *     if i <= base:
+ */
+      __pyx_v_base = __pyx_v_current_base;
+
+      /* "line_generation/generator.pyx":91
+ *     for j in range(LOG_BASES_SIZE): #[2, 3, 5, 7, 11, 13, 17]:
+ *         current_base = LOG_BASES[j]
+ *         if decimal_part(log(size) / log(current_base)) < closeness:             # <<<<<<<<<<<<<<
+ *             closeness = decimal_part(log(size) / log(current_base))
+ *             base = current_base
+ */
+    }
+  }
+
+  /* "line_generation/generator.pyx":94
+ *             closeness = decimal_part(log(size) / log(current_base))
+ *             base = current_base
+ *     base = 2             # <<<<<<<<<<<<<<
+ *     if i <= base:
+ *         return <int>(size / base * i)
+ */
+  __pyx_v_base = 2;
+
+  /* "line_generation/generator.pyx":95
+ *             base = current_base
+ *     base = 2
+ *     if i <= base:             # <<<<<<<<<<<<<<
+ *         return <int>(size / base * i)
+ *     else:
+ */
+  __pyx_t_4 = ((__pyx_v_i <= __pyx_v_base) != 0);
+  if (__pyx_t_4) {
+
+    /* "line_generation/generator.pyx":96
+ *     base = 2
+ *     if i <= base:
+ *         return <int>(size / base * i)             # <<<<<<<<<<<<<<
+ *     else:
+ *         exponent = <int>(log(i) / log(base))
+ */
+    __pyx_r = ((int)((__pyx_v_size / __pyx_v_base) * __pyx_v_i));
+    goto __pyx_L0;
+
+    /* "line_generation/generator.pyx":95
+ *             base = current_base
+ *     base = 2
+ *     if i <= base:             # <<<<<<<<<<<<<<
+ *         return <int>(size / base * i)
+ *     else:
+ */
+  }
+
+  /* "line_generation/generator.pyx":98
+ *         return <int>(size / base * i)
+ *     else:
+ *         exponent = <int>(log(i) / log(base))             # <<<<<<<<<<<<<<
+ *         return <int>(size / base ** (exponent) * (i - base ** (exponent)) + size / base ** (exponent))
+ * 
+ */
+  /*else*/ {
+    __pyx_v_exponent = ((int)(log(__pyx_v_i) / log(__pyx_v_base)));
+
+    /* "line_generation/generator.pyx":99
+ *     else:
+ *         exponent = <int>(log(i) / log(base))
+ *         return <int>(size / base ** (exponent) * (i - base ** (exponent)) + size / base ** (exponent))             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+    __pyx_r = ((int)(((__pyx_v_size / __Pyx_pow_int(__pyx_v_base, __pyx_v_exponent)) * (__pyx_v_i - __Pyx_pow_int(__pyx_v_base, __pyx_v_exponent))) + (__pyx_v_size / __Pyx_pow_int(__pyx_v_base, __pyx_v_exponent))));
+    goto __pyx_L0;
+  }
+
+  /* "line_generation/generator.pyx":80
+ * 
+ * 
+ * cdef int index_generator(int i, int size):             # <<<<<<<<<<<<<<
+ *     cdef int base = 0
+ *     cdef int exponent = 0
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "line_generation/generator.pyx":102
  * 
  * 
  * cdef (int, int) find_next_perimeter(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,             # <<<<<<<<<<<<<<
- *                                     double[:, :] x_field, double[:, :] y_field, double line_width):
- *     cdef int i = 0
+ *                                     double[:, :] x_field, double[:, :] y_field, double line_width, int* last_index,
+ *                                     str sorting):
  */
 
-static __pyx_ctuple_int__and_int __pyx_f_15line_generation_9generator_find_next_perimeter(__Pyx_memviewslice __pyx_v_perimeter, __Pyx_memviewslice __pyx_v_empty_elements, __Pyx_memviewslice __pyx_v_filled_elements, __Pyx_memviewslice __pyx_v_x_field, __Pyx_memviewslice __pyx_v_y_field, double __pyx_v_line_width) {
+static __pyx_ctuple_int__and_int __pyx_f_15line_generation_9generator_find_next_perimeter(__Pyx_memviewslice __pyx_v_perimeter, __Pyx_memviewslice __pyx_v_empty_elements, __Pyx_memviewslice __pyx_v_filled_elements, CYTHON_UNUSED __Pyx_memviewslice __pyx_v_x_field, CYTHON_UNUSED __Pyx_memviewslice __pyx_v_y_field, double __pyx_v_line_width, int *__pyx_v_last_index, PyObject *__pyx_v_sorting) {
   int __pyx_v_i;
-  CYTHON_UNUSED double __pyx_v_distance_from_filled;
-  double __pyx_v_vx;
-  double __pyx_v_vy;
-  CYTHON_UNUSED int __pyx_v_x_filled;
-  CYTHON_UNUSED int __pyx_v_y_filled;
+  int __pyx_v_j;
   __pyx_ctuple_int__and_int __pyx_r;
   __Pyx_RefNannyDeclarations
-  Py_ssize_t __pyx_t_1;
-  Py_ssize_t __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
   Py_ssize_t __pyx_t_4;
   Py_ssize_t __pyx_t_5;
-  Py_ssize_t __pyx_t_6;
+  int __pyx_t_6;
   Py_ssize_t __pyx_t_7;
   Py_ssize_t __pyx_t_8;
   Py_ssize_t __pyx_t_9;
@@ -3212,14 +3539,14 @@ static __pyx_ctuple_int__and_int __pyx_f_15line_generation_9generator_find_next_
   Py_ssize_t __pyx_t_12;
   Py_ssize_t __pyx_t_13;
   Py_ssize_t __pyx_t_14;
-  int __pyx_t_15;
+  Py_ssize_t __pyx_t_15;
   Py_ssize_t __pyx_t_16;
   Py_ssize_t __pyx_t_17;
   Py_ssize_t __pyx_t_18;
   Py_ssize_t __pyx_t_19;
   Py_ssize_t __pyx_t_20;
-  Py_ssize_t __pyx_t_21;
-  int __pyx_t_22;
+  __pyx_ctuple_int__and_int __pyx_t_21;
+  Py_ssize_t __pyx_t_22;
   Py_ssize_t __pyx_t_23;
   Py_ssize_t __pyx_t_24;
   Py_ssize_t __pyx_t_25;
@@ -3228,7 +3555,7 @@ static __pyx_ctuple_int__and_int __pyx_f_15line_generation_9generator_find_next_
   Py_ssize_t __pyx_t_28;
   Py_ssize_t __pyx_t_29;
   Py_ssize_t __pyx_t_30;
-  __pyx_ctuple_int__and_int __pyx_t_31;
+  Py_ssize_t __pyx_t_31;
   Py_ssize_t __pyx_t_32;
   Py_ssize_t __pyx_t_33;
   Py_ssize_t __pyx_t_34;
@@ -3241,259 +3568,441 @@ static __pyx_ctuple_int__and_int __pyx_f_15line_generation_9generator_find_next_
   Py_ssize_t __pyx_t_41;
   Py_ssize_t __pyx_t_42;
   Py_ssize_t __pyx_t_43;
-  __pyx_ctuple_double__and_double __pyx_t_44;
-  double __pyx_t_45;
-  double __pyx_t_46;
+  Py_ssize_t __pyx_t_44;
+  Py_ssize_t __pyx_t_45;
+  Py_ssize_t __pyx_t_46;
   Py_ssize_t __pyx_t_47;
   Py_ssize_t __pyx_t_48;
-  int __pyx_t_49;
+  Py_ssize_t __pyx_t_49;
   Py_ssize_t __pyx_t_50;
   Py_ssize_t __pyx_t_51;
-  int __pyx_t_52;
+  Py_ssize_t __pyx_t_52;
+  Py_ssize_t __pyx_t_53;
+  Py_ssize_t __pyx_t_54;
+  Py_ssize_t __pyx_t_55;
+  Py_ssize_t __pyx_t_56;
+  Py_ssize_t __pyx_t_57;
+  Py_ssize_t __pyx_t_58;
+  Py_ssize_t __pyx_t_59;
+  Py_ssize_t __pyx_t_60;
+  Py_ssize_t __pyx_t_61;
+  Py_ssize_t __pyx_t_62;
+  Py_ssize_t __pyx_t_63;
   __Pyx_RefNannySetupContext("find_next_perimeter", 0);
 
-  /* "line_generation/generator.pyx":70
- * cdef (int, int) find_next_perimeter(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,
- *                                     double[:, :] x_field, double[:, :] y_field, double line_width):
+  /* "line_generation/generator.pyx":105
+ *                                     double[:, :] x_field, double[:, :] y_field, double line_width, int* last_index,
+ *                                     str sorting):
  *     cdef int i = 0             # <<<<<<<<<<<<<<
- *     cdef double distance_from_filled = 0
- *     cdef double vx = x_field[perimeter[0, 0], perimeter[0, 1]]
+ *     cdef int j = 0
+ * 
  */
   __pyx_v_i = 0;
 
-  /* "line_generation/generator.pyx":71
- *                                     double[:, :] x_field, double[:, :] y_field, double line_width):
+  /* "line_generation/generator.pyx":106
+ *                                     str sorting):
  *     cdef int i = 0
- *     cdef double distance_from_filled = 0             # <<<<<<<<<<<<<<
- *     cdef double vx = x_field[perimeter[0, 0], perimeter[0, 1]]
- *     cdef double vy = y_field[perimeter[0, 0], perimeter[0, 1]]
+ *     cdef int j = 0             # <<<<<<<<<<<<<<
+ * 
+ *     if sorting == "opposite":
  */
-  __pyx_v_distance_from_filled = 0.0;
+  __pyx_v_j = 0;
 
-  /* "line_generation/generator.pyx":72
- *     cdef int i = 0
- *     cdef double distance_from_filled = 0
- *     cdef double vx = x_field[perimeter[0, 0], perimeter[0, 1]]             # <<<<<<<<<<<<<<
- *     cdef double vy = y_field[perimeter[0, 0], perimeter[0, 1]]
- *     cdef int x_filled = 0
+  /* "line_generation/generator.pyx":108
+ *     cdef int j = 0
+ * 
+ *     if sorting == "opposite":             # <<<<<<<<<<<<<<
+ *         i = index_generator(last_index[0], perimeter.shape[0])
+ *         last_index[0] += 1
  */
-  __pyx_t_1 = 0;
-  __pyx_t_2 = 0;
-  __pyx_t_3 = 0;
-  __pyx_t_4 = 1;
-  __pyx_t_5 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_1 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_2 * __pyx_v_perimeter.strides[1]) )));
-  __pyx_t_6 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_3 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_4 * __pyx_v_perimeter.strides[1]) )));
-  __pyx_v_vx = (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_field.data + __pyx_t_5 * __pyx_v_x_field.strides[0]) ) + __pyx_t_6 * __pyx_v_x_field.strides[1]) )));
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_sorting, __pyx_n_u_opposite, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 108, __pyx_L1_error)
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
-  /* "line_generation/generator.pyx":73
- *     cdef double distance_from_filled = 0
- *     cdef double vx = x_field[perimeter[0, 0], perimeter[0, 1]]
- *     cdef double vy = y_field[perimeter[0, 0], perimeter[0, 1]]             # <<<<<<<<<<<<<<
- *     cdef int x_filled = 0
- *     cdef int y_filled = 0
- */
-  __pyx_t_7 = 0;
-  __pyx_t_8 = 0;
-  __pyx_t_9 = 0;
-  __pyx_t_10 = 1;
-  __pyx_t_11 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_7 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_8 * __pyx_v_perimeter.strides[1]) )));
-  __pyx_t_12 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_9 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_10 * __pyx_v_perimeter.strides[1]) )));
-  __pyx_v_vy = (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_y_field.data + __pyx_t_11 * __pyx_v_y_field.strides[0]) ) + __pyx_t_12 * __pyx_v_y_field.strides[1]) )));
-
-  /* "line_generation/generator.pyx":74
- *     cdef double vx = x_field[perimeter[0, 0], perimeter[0, 1]]
- *     cdef double vy = y_field[perimeter[0, 0], perimeter[0, 1]]
- *     cdef int x_filled = 0             # <<<<<<<<<<<<<<
- *     cdef int y_filled = 0
+    /* "line_generation/generator.pyx":109
+ * 
+ *     if sorting == "opposite":
+ *         i = index_generator(last_index[0], perimeter.shape[0])             # <<<<<<<<<<<<<<
+ *         last_index[0] += 1
  * 
  */
-  __pyx_v_x_filled = 0;
+    __pyx_v_i = __pyx_f_15line_generation_9generator_index_generator((__pyx_v_last_index[0]), (__pyx_v_perimeter.shape[0]));
 
-  /* "line_generation/generator.pyx":75
- *     cdef double vy = y_field[perimeter[0, 0], perimeter[0, 1]]
- *     cdef int x_filled = 0
- *     cdef int y_filled = 0             # <<<<<<<<<<<<<<
+    /* "line_generation/generator.pyx":110
+ *     if sorting == "opposite":
+ *         i = index_generator(last_index[0], perimeter.shape[0])
+ *         last_index[0] += 1             # <<<<<<<<<<<<<<
  * 
- *     for i in range(perimeter.shape[0]):
+ *         for j in range(i, perimeter.shape[0]):
  */
-  __pyx_v_y_filled = 0;
+    __pyx_t_3 = 0;
+    (__pyx_v_last_index[__pyx_t_3]) = ((__pyx_v_last_index[__pyx_t_3]) + 1);
 
-  /* "line_generation/generator.pyx":77
- *     cdef int y_filled = 0
+    /* "line_generation/generator.pyx":112
+ *         last_index[0] += 1
  * 
- *     for i in range(perimeter.shape[0]):             # <<<<<<<<<<<<<<
- *         if empty_elements[perimeter[i, 0], perimeter[i, 1]]:
- *             if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[i, 0], perimeter[i, 1]):
+ *         for j in range(i, perimeter.shape[0]):             # <<<<<<<<<<<<<<
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
  */
-  __pyx_t_13 = (__pyx_v_perimeter.shape[0]);
-  __pyx_t_14 = __pyx_t_13;
-  for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
-    __pyx_v_i = __pyx_t_15;
+    __pyx_t_4 = (__pyx_v_perimeter.shape[0]);
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_j = __pyx_t_6;
 
-    /* "line_generation/generator.pyx":78
+      /* "line_generation/generator.pyx":113
  * 
- *     for i in range(perimeter.shape[0]):
- *         if empty_elements[perimeter[i, 0], perimeter[i, 1]]:             # <<<<<<<<<<<<<<
- *             if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[i, 0], perimeter[i, 1]):
- *                 return perimeter[i, 0], perimeter[i, 1]
+ *         for j in range(i, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:             # <<<<<<<<<<<<<<
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
  */
-    __pyx_t_16 = __pyx_v_i;
-    __pyx_t_17 = 0;
-    __pyx_t_18 = __pyx_v_i;
-    __pyx_t_19 = 1;
-    __pyx_t_20 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_16 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_17 * __pyx_v_perimeter.strides[1]) )));
-    __pyx_t_21 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_18 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_19 * __pyx_v_perimeter.strides[1]) )));
-    __pyx_t_22 = ((*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_20 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_21 * __pyx_v_empty_elements.strides[1]) ))) != 0);
-    if (__pyx_t_22) {
+      __pyx_t_7 = __pyx_v_j;
+      __pyx_t_8 = 0;
+      __pyx_t_9 = __pyx_v_j;
+      __pyx_t_10 = 1;
+      __pyx_t_11 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_7 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_8 * __pyx_v_perimeter.strides[1]) )));
+      __pyx_t_12 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_9 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_10 * __pyx_v_perimeter.strides[1]) )));
+      __pyx_t_2 = ((*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_11 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_12 * __pyx_v_empty_elements.strides[1]) ))) != 0);
+      if (__pyx_t_2) {
 
-      /* "line_generation/generator.pyx":79
- *     for i in range(perimeter.shape[0]):
- *         if empty_elements[perimeter[i, 0], perimeter[i, 1]]:
- *             if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[i, 0], perimeter[i, 1]):             # <<<<<<<<<<<<<<
- *                 return perimeter[i, 0], perimeter[i, 1]
- *         else:
+        /* "line_generation/generator.pyx":114
+ *         for j in range(i, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):             # <<<<<<<<<<<<<<
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(i, 0, -1):
  */
-      __pyx_t_23 = __pyx_v_i;
-      __pyx_t_24 = 0;
-      __pyx_t_25 = __pyx_v_i;
-      __pyx_t_26 = 1;
-      __pyx_t_22 = (__pyx_f_15line_generation_9generator_check_proximity(__pyx_v_filled_elements, (__pyx_v_line_width * __pyx_v_15line_generation_9generator_NEW_LINE_SEPARATION), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_23 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_24 * __pyx_v_perimeter.strides[1]) ))), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_25 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_26 * __pyx_v_perimeter.strides[1]) ))), NULL) != 0);
-      if (__pyx_t_22) {
+        __pyx_t_13 = __pyx_v_j;
+        __pyx_t_14 = 0;
+        __pyx_t_15 = __pyx_v_j;
+        __pyx_t_16 = 1;
+        __pyx_t_2 = (__pyx_f_15line_generation_9generator_check_proximity(__pyx_v_filled_elements, (__pyx_v_line_width * __pyx_v_15line_generation_9generator_NEW_LINE_SEPARATION), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_13 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_14 * __pyx_v_perimeter.strides[1]) ))), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_15 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_16 * __pyx_v_perimeter.strides[1]) ))), NULL) != 0);
+        if (__pyx_t_2) {
 
-        /* "line_generation/generator.pyx":80
- *         if empty_elements[perimeter[i, 0], perimeter[i, 1]]:
- *             if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[i, 0], perimeter[i, 1]):
- *                 return perimeter[i, 0], perimeter[i, 1]             # <<<<<<<<<<<<<<
- *         else:
- *             vx = x_field[perimeter[i, 0], perimeter[i, 1]]
+          /* "line_generation/generator.pyx":115
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]             # <<<<<<<<<<<<<<
+ *         for j in range(i, 0, -1):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
  */
-        __pyx_t_27 = __pyx_v_i;
-        __pyx_t_28 = 0;
-        __pyx_t_29 = __pyx_v_i;
-        __pyx_t_30 = 1;
-        __pyx_t_31.f0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_27 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_28 * __pyx_v_perimeter.strides[1]) )));
-        __pyx_t_31.f1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_29 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_30 * __pyx_v_perimeter.strides[1]) )));
-        __pyx_r = __pyx_t_31;
-        goto __pyx_L0;
+          __pyx_t_17 = __pyx_v_j;
+          __pyx_t_18 = 0;
+          __pyx_t_19 = __pyx_v_j;
+          __pyx_t_20 = 1;
+          __pyx_t_21.f0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_17 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_18 * __pyx_v_perimeter.strides[1]) )));
+          __pyx_t_21.f1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_19 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_20 * __pyx_v_perimeter.strides[1]) )));
+          __pyx_r = __pyx_t_21;
+          goto __pyx_L0;
 
-        /* "line_generation/generator.pyx":79
- *     for i in range(perimeter.shape[0]):
- *         if empty_elements[perimeter[i, 0], perimeter[i, 1]]:
- *             if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[i, 0], perimeter[i, 1]):             # <<<<<<<<<<<<<<
- *                 return perimeter[i, 0], perimeter[i, 1]
- *         else:
+          /* "line_generation/generator.pyx":114
+ *         for j in range(i, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):             # <<<<<<<<<<<<<<
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(i, 0, -1):
+ */
+        }
+
+        /* "line_generation/generator.pyx":113
+ * 
+ *         for j in range(i, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:             # <<<<<<<<<<<<<<
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
  */
       }
-
-      /* "line_generation/generator.pyx":78
- * 
- *     for i in range(perimeter.shape[0]):
- *         if empty_elements[perimeter[i, 0], perimeter[i, 1]]:             # <<<<<<<<<<<<<<
- *             if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[i, 0], perimeter[i, 1]):
- *                 return perimeter[i, 0], perimeter[i, 1]
- */
-      goto __pyx_L5;
     }
 
-    /* "line_generation/generator.pyx":82
- *                 return perimeter[i, 0], perimeter[i, 1]
- *         else:
- *             vx = x_field[perimeter[i, 0], perimeter[i, 1]]             # <<<<<<<<<<<<<<
- *             vy = y_field[perimeter[i, 0], perimeter[i, 1]]
- *             vx, vy = normalize(vx, vy)
+    /* "line_generation/generator.pyx":116
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(i, 0, -1):             # <<<<<<<<<<<<<<
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
  */
-    /*else*/ {
-      __pyx_t_32 = __pyx_v_i;
-      __pyx_t_33 = 0;
-      __pyx_t_34 = __pyx_v_i;
-      __pyx_t_35 = 1;
-      __pyx_t_36 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_32 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_33 * __pyx_v_perimeter.strides[1]) )));
-      __pyx_t_37 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_34 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_35 * __pyx_v_perimeter.strides[1]) )));
-      __pyx_v_vx = (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x_field.data + __pyx_t_36 * __pyx_v_x_field.strides[0]) ) + __pyx_t_37 * __pyx_v_x_field.strides[1]) )));
+    for (__pyx_t_6 = __pyx_v_i; __pyx_t_6 > 0; __pyx_t_6-=1) {
+      __pyx_v_j = __pyx_t_6;
 
-      /* "line_generation/generator.pyx":83
- *         else:
- *             vx = x_field[perimeter[i, 0], perimeter[i, 1]]
- *             vy = y_field[perimeter[i, 0], perimeter[i, 1]]             # <<<<<<<<<<<<<<
- *             vx, vy = normalize(vx, vy)
- *             x_filled, y_filled = perimeter[i, 0], perimeter[i, 1]
+      /* "line_generation/generator.pyx":117
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(i, 0, -1):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:             # <<<<<<<<<<<<<<
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
  */
-      __pyx_t_38 = __pyx_v_i;
-      __pyx_t_39 = 0;
-      __pyx_t_40 = __pyx_v_i;
-      __pyx_t_41 = 1;
-      __pyx_t_42 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_38 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_39 * __pyx_v_perimeter.strides[1]) )));
-      __pyx_t_43 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_40 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_41 * __pyx_v_perimeter.strides[1]) )));
-      __pyx_v_vy = (*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_y_field.data + __pyx_t_42 * __pyx_v_y_field.strides[0]) ) + __pyx_t_43 * __pyx_v_y_field.strides[1]) )));
+      __pyx_t_22 = __pyx_v_j;
+      __pyx_t_23 = 0;
+      __pyx_t_24 = __pyx_v_j;
+      __pyx_t_25 = 1;
+      __pyx_t_26 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_22 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_23 * __pyx_v_perimeter.strides[1]) )));
+      __pyx_t_27 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_24 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_25 * __pyx_v_perimeter.strides[1]) )));
+      __pyx_t_2 = ((*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_26 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_27 * __pyx_v_empty_elements.strides[1]) ))) != 0);
+      if (__pyx_t_2) {
 
-      /* "line_generation/generator.pyx":84
- *             vx = x_field[perimeter[i, 0], perimeter[i, 1]]
- *             vy = y_field[perimeter[i, 0], perimeter[i, 1]]
- *             vx, vy = normalize(vx, vy)             # <<<<<<<<<<<<<<
- *             x_filled, y_filled = perimeter[i, 0], perimeter[i, 1]
- *             distance_from_filled = 0
+        /* "line_generation/generator.pyx":118
+ *         for j in range(i, 0, -1):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):             # <<<<<<<<<<<<<<
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(0, perimeter.shape[0]):
  */
-      __pyx_t_44 = __pyx_f_15line_generation_9generator_normalize(__pyx_v_vx, __pyx_v_vy);
-      __pyx_t_45 = __pyx_t_44.f0;
-      __pyx_t_46 = __pyx_t_44.f1;
-      __pyx_v_vx = __pyx_t_45;
-      __pyx_v_vy = __pyx_t_46;
+        __pyx_t_28 = __pyx_v_j;
+        __pyx_t_29 = 0;
+        __pyx_t_30 = __pyx_v_j;
+        __pyx_t_31 = 1;
+        __pyx_t_2 = (__pyx_f_15line_generation_9generator_check_proximity(__pyx_v_filled_elements, (__pyx_v_line_width * __pyx_v_15line_generation_9generator_NEW_LINE_SEPARATION), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_28 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_29 * __pyx_v_perimeter.strides[1]) ))), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_30 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_31 * __pyx_v_perimeter.strides[1]) ))), NULL) != 0);
+        if (__pyx_t_2) {
 
-      /* "line_generation/generator.pyx":85
- *             vy = y_field[perimeter[i, 0], perimeter[i, 1]]
- *             vx, vy = normalize(vx, vy)
- *             x_filled, y_filled = perimeter[i, 0], perimeter[i, 1]             # <<<<<<<<<<<<<<
- *             distance_from_filled = 0
- *     return 0, 0
+          /* "line_generation/generator.pyx":119
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]             # <<<<<<<<<<<<<<
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
  */
-      __pyx_t_47 = __pyx_v_i;
-      __pyx_t_48 = 0;
-      __pyx_t_49 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_47 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_48 * __pyx_v_perimeter.strides[1]) )));
-      __pyx_t_50 = __pyx_v_i;
-      __pyx_t_51 = 1;
-      __pyx_t_52 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_50 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_51 * __pyx_v_perimeter.strides[1]) )));
-      __pyx_v_x_filled = __pyx_t_49;
-      __pyx_v_y_filled = __pyx_t_52;
+          __pyx_t_32 = __pyx_v_j;
+          __pyx_t_33 = 0;
+          __pyx_t_34 = __pyx_v_j;
+          __pyx_t_35 = 1;
+          __pyx_t_21.f0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_32 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_33 * __pyx_v_perimeter.strides[1]) )));
+          __pyx_t_21.f1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_34 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_35 * __pyx_v_perimeter.strides[1]) )));
+          __pyx_r = __pyx_t_21;
+          goto __pyx_L0;
 
-      /* "line_generation/generator.pyx":86
- *             vx, vy = normalize(vx, vy)
- *             x_filled, y_filled = perimeter[i, 0], perimeter[i, 1]
- *             distance_from_filled = 0             # <<<<<<<<<<<<<<
- *     return 0, 0
- * 
+          /* "line_generation/generator.pyx":118
+ *         for j in range(i, 0, -1):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):             # <<<<<<<<<<<<<<
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(0, perimeter.shape[0]):
  */
-      __pyx_v_distance_from_filled = 0.0;
+        }
+
+        /* "line_generation/generator.pyx":117
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(i, 0, -1):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:             # <<<<<<<<<<<<<<
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ */
+      }
     }
-    __pyx_L5:;
+
+    /* "line_generation/generator.pyx":120
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(0, perimeter.shape[0]):             # <<<<<<<<<<<<<<
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ */
+    __pyx_t_4 = (__pyx_v_perimeter.shape[0]);
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_j = __pyx_t_6;
+
+      /* "line_generation/generator.pyx":121
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:             # <<<<<<<<<<<<<<
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ */
+      __pyx_t_36 = __pyx_v_j;
+      __pyx_t_37 = 0;
+      __pyx_t_38 = __pyx_v_j;
+      __pyx_t_39 = 1;
+      __pyx_t_40 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_36 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_37 * __pyx_v_perimeter.strides[1]) )));
+      __pyx_t_41 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_38 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_39 * __pyx_v_perimeter.strides[1]) )));
+      __pyx_t_2 = ((*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_40 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_41 * __pyx_v_empty_elements.strides[1]) ))) != 0);
+      if (__pyx_t_2) {
+
+        /* "line_generation/generator.pyx":122
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):             # <<<<<<<<<<<<<<
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *     if sorting == "consecutive":
+ */
+        __pyx_t_42 = __pyx_v_j;
+        __pyx_t_43 = 0;
+        __pyx_t_44 = __pyx_v_j;
+        __pyx_t_45 = 1;
+        __pyx_t_2 = (__pyx_f_15line_generation_9generator_check_proximity(__pyx_v_filled_elements, (__pyx_v_line_width * __pyx_v_15line_generation_9generator_NEW_LINE_SEPARATION), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_42 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_43 * __pyx_v_perimeter.strides[1]) ))), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_44 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_45 * __pyx_v_perimeter.strides[1]) ))), NULL) != 0);
+        if (__pyx_t_2) {
+
+          /* "line_generation/generator.pyx":123
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]             # <<<<<<<<<<<<<<
+ *     if sorting == "consecutive":
+ *         for j in range(0, perimeter.shape[0]):
+ */
+          __pyx_t_46 = __pyx_v_j;
+          __pyx_t_47 = 0;
+          __pyx_t_48 = __pyx_v_j;
+          __pyx_t_49 = 1;
+          __pyx_t_21.f0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_46 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_47 * __pyx_v_perimeter.strides[1]) )));
+          __pyx_t_21.f1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_48 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_49 * __pyx_v_perimeter.strides[1]) )));
+          __pyx_r = __pyx_t_21;
+          goto __pyx_L0;
+
+          /* "line_generation/generator.pyx":122
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):             # <<<<<<<<<<<<<<
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *     if sorting == "consecutive":
+ */
+        }
+
+        /* "line_generation/generator.pyx":121
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:             # <<<<<<<<<<<<<<
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ */
+      }
+    }
+
+    /* "line_generation/generator.pyx":108
+ *     cdef int j = 0
+ * 
+ *     if sorting == "opposite":             # <<<<<<<<<<<<<<
+ *         i = index_generator(last_index[0], perimeter.shape[0])
+ *         last_index[0] += 1
+ */
   }
 
-  /* "line_generation/generator.pyx":87
- *             x_filled, y_filled = perimeter[i, 0], perimeter[i, 1]
- *             distance_from_filled = 0
+  /* "line_generation/generator.pyx":124
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *     if sorting == "consecutive":             # <<<<<<<<<<<<<<
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ */
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_sorting, __pyx_n_u_consecutive, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
+
+    /* "line_generation/generator.pyx":125
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *     if sorting == "consecutive":
+ *         for j in range(0, perimeter.shape[0]):             # <<<<<<<<<<<<<<
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ */
+    __pyx_t_4 = (__pyx_v_perimeter.shape[0]);
+    __pyx_t_5 = __pyx_t_4;
+    for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+      __pyx_v_j = __pyx_t_6;
+
+      /* "line_generation/generator.pyx":126
+ *     if sorting == "consecutive":
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:             # <<<<<<<<<<<<<<
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ */
+      __pyx_t_50 = __pyx_v_j;
+      __pyx_t_51 = 0;
+      __pyx_t_52 = __pyx_v_j;
+      __pyx_t_53 = 1;
+      __pyx_t_54 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_50 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_51 * __pyx_v_perimeter.strides[1]) )));
+      __pyx_t_55 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_52 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_53 * __pyx_v_perimeter.strides[1]) )));
+      __pyx_t_1 = ((*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_54 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_55 * __pyx_v_empty_elements.strides[1]) ))) != 0);
+      if (__pyx_t_1) {
+
+        /* "line_generation/generator.pyx":127
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):             # <<<<<<<<<<<<<<
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *     return 0, 0
+ */
+        __pyx_t_56 = __pyx_v_j;
+        __pyx_t_57 = 0;
+        __pyx_t_58 = __pyx_v_j;
+        __pyx_t_59 = 1;
+        __pyx_t_1 = (__pyx_f_15line_generation_9generator_check_proximity(__pyx_v_filled_elements, (__pyx_v_line_width * __pyx_v_15line_generation_9generator_NEW_LINE_SEPARATION), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_56 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_57 * __pyx_v_perimeter.strides[1]) ))), (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_58 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_59 * __pyx_v_perimeter.strides[1]) ))), NULL) != 0);
+        if (__pyx_t_1) {
+
+          /* "line_generation/generator.pyx":128
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]             # <<<<<<<<<<<<<<
+ *     return 0, 0
+ * 
+ */
+          __pyx_t_60 = __pyx_v_j;
+          __pyx_t_61 = 0;
+          __pyx_t_62 = __pyx_v_j;
+          __pyx_t_63 = 1;
+          __pyx_t_21.f0 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_60 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_61 * __pyx_v_perimeter.strides[1]) )));
+          __pyx_t_21.f1 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_perimeter.data + __pyx_t_62 * __pyx_v_perimeter.strides[0]) ) + __pyx_t_63 * __pyx_v_perimeter.strides[1]) )));
+          __pyx_r = __pyx_t_21;
+          goto __pyx_L0;
+
+          /* "line_generation/generator.pyx":127
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):             # <<<<<<<<<<<<<<
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *     return 0, 0
+ */
+        }
+
+        /* "line_generation/generator.pyx":126
+ *     if sorting == "consecutive":
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:             # <<<<<<<<<<<<<<
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ */
+      }
+    }
+
+    /* "line_generation/generator.pyx":124
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
+ *     if sorting == "consecutive":             # <<<<<<<<<<<<<<
+ *         for j in range(0, perimeter.shape[0]):
+ *             if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+ */
+  }
+
+  /* "line_generation/generator.pyx":129
+ *                 if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+ *                     return perimeter[j, 0], perimeter[j, 1]
  *     return 0, 0             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_31.f0 = 0;
-  __pyx_t_31.f1 = 0;
-  __pyx_r = __pyx_t_31;
+  __pyx_t_21.f0 = 0;
+  __pyx_t_21.f1 = 0;
+  __pyx_r = __pyx_t_21;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":68
+  /* "line_generation/generator.pyx":102
  * 
  * 
  * cdef (int, int) find_next_perimeter(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,             # <<<<<<<<<<<<<<
- *                                     double[:, :] x_field, double[:, :] y_field, double line_width):
- *     cdef int i = 0
+ *                                     double[:, :] x_field, double[:, :] y_field, double line_width, int* last_index,
+ *                                     str sorting):
  */
 
   /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_WriteUnraisable("line_generation.generator.find_next_perimeter", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_pretend_to_initialize(&__pyx_r);
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":90
+/* "line_generation/generator.pyx":132
  * 
  * 
  * cdef double bilinear_interpolation(double[:, :] field, double x, double y):             # <<<<<<<<<<<<<<
@@ -3519,7 +4028,7 @@ static double __pyx_f_15line_generation_9generator_bilinear_interpolation(__Pyx_
   Py_ssize_t __pyx_t_8;
   __Pyx_RefNannySetupContext("bilinear_interpolation", 0);
 
-  /* "line_generation/generator.pyx":91
+  /* "line_generation/generator.pyx":133
  * 
  * cdef double bilinear_interpolation(double[:, :] field, double x, double y):
  *     cdef int x_1 = int(floor(x))             # <<<<<<<<<<<<<<
@@ -3528,7 +4037,7 @@ static double __pyx_f_15line_generation_9generator_bilinear_interpolation(__Pyx_
  */
   __pyx_v_x_1 = ((int)floor(__pyx_v_x));
 
-  /* "line_generation/generator.pyx":92
+  /* "line_generation/generator.pyx":134
  * cdef double bilinear_interpolation(double[:, :] field, double x, double y):
  *     cdef int x_1 = int(floor(x))
  *     cdef int x_2 = x_1 + 1             # <<<<<<<<<<<<<<
@@ -3537,7 +4046,7 @@ static double __pyx_f_15line_generation_9generator_bilinear_interpolation(__Pyx_
  */
   __pyx_v_x_2 = (__pyx_v_x_1 + 1);
 
-  /* "line_generation/generator.pyx":93
+  /* "line_generation/generator.pyx":135
  *     cdef int x_1 = int(floor(x))
  *     cdef int x_2 = x_1 + 1
  *     cdef int y_1 = int(floor(y))             # <<<<<<<<<<<<<<
@@ -3546,7 +4055,7 @@ static double __pyx_f_15line_generation_9generator_bilinear_interpolation(__Pyx_
  */
   __pyx_v_y_1 = ((int)floor(__pyx_v_y));
 
-  /* "line_generation/generator.pyx":94
+  /* "line_generation/generator.pyx":136
  *     cdef int x_2 = x_1 + 1
  *     cdef int y_1 = int(floor(y))
  *     cdef int y_2 = y_1 + 1             # <<<<<<<<<<<<<<
@@ -3555,62 +4064,62 @@ static double __pyx_f_15line_generation_9generator_bilinear_interpolation(__Pyx_
  */
   __pyx_v_y_2 = (__pyx_v_y_1 + 1);
 
-  /* "line_generation/generator.pyx":95
+  /* "line_generation/generator.pyx":137
  *     cdef int y_1 = int(floor(y))
  *     cdef int y_2 = y_1 + 1
  *     cdef double v = 0             # <<<<<<<<<<<<<<
  * 
- *     # v += field[x_int, y_int] * (1 + x_int - x) * (1 + y_int - y)
+ *     v += field[x_1, y_1] * (x_2 - x) * (y_2 - y)
  */
   __pyx_v_v = 0.0;
 
-  /* "line_generation/generator.pyx":102
- *     # v += field[x_int + 1, y_int] * (x - x_int) * (1 + y_int - y)
+  /* "line_generation/generator.pyx":139
+ *     cdef double v = 0
  * 
  *     v += field[x_1, y_1] * (x_2 - x) * (y_2 - y)             # <<<<<<<<<<<<<<
- *     v += field[x_1, y_2] * (x_2 - x) * (y_1 - y)
- *     v += field[x_2, y_1] * (x_1 - x) * (y_2 - y)
+ *     v += field[x_1, y_2] * (x_2 - x) * (y - y_1)
+ *     v += field[x_2, y_1] * (x - x_1) * (y_2 - y)
  */
   __pyx_t_1 = __pyx_v_x_1;
   __pyx_t_2 = __pyx_v_y_1;
   __pyx_v_v = (__pyx_v_v + (((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_field.data + __pyx_t_1 * __pyx_v_field.strides[0]) ) + __pyx_t_2 * __pyx_v_field.strides[1]) ))) * (__pyx_v_x_2 - __pyx_v_x)) * (__pyx_v_y_2 - __pyx_v_y)));
 
-  /* "line_generation/generator.pyx":103
+  /* "line_generation/generator.pyx":140
  * 
  *     v += field[x_1, y_1] * (x_2 - x) * (y_2 - y)
- *     v += field[x_1, y_2] * (x_2 - x) * (y_1 - y)             # <<<<<<<<<<<<<<
- *     v += field[x_2, y_1] * (x_1 - x) * (y_2 - y)
- *     v += field[x_2, y_2] * (x_1 - x) * (y_1 - y)
+ *     v += field[x_1, y_2] * (x_2 - x) * (y - y_1)             # <<<<<<<<<<<<<<
+ *     v += field[x_2, y_1] * (x - x_1) * (y_2 - y)
+ *     v += field[x_2, y_2] * (x - x_1) * (y - y_1)
  */
   __pyx_t_3 = __pyx_v_x_1;
   __pyx_t_4 = __pyx_v_y_2;
-  __pyx_v_v = (__pyx_v_v + (((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_field.data + __pyx_t_3 * __pyx_v_field.strides[0]) ) + __pyx_t_4 * __pyx_v_field.strides[1]) ))) * (__pyx_v_x_2 - __pyx_v_x)) * (__pyx_v_y_1 - __pyx_v_y)));
+  __pyx_v_v = (__pyx_v_v + (((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_field.data + __pyx_t_3 * __pyx_v_field.strides[0]) ) + __pyx_t_4 * __pyx_v_field.strides[1]) ))) * (__pyx_v_x_2 - __pyx_v_x)) * (__pyx_v_y - __pyx_v_y_1)));
 
-  /* "line_generation/generator.pyx":104
+  /* "line_generation/generator.pyx":141
  *     v += field[x_1, y_1] * (x_2 - x) * (y_2 - y)
- *     v += field[x_1, y_2] * (x_2 - x) * (y_1 - y)
- *     v += field[x_2, y_1] * (x_1 - x) * (y_2 - y)             # <<<<<<<<<<<<<<
- *     v += field[x_2, y_2] * (x_1 - x) * (y_1 - y)
+ *     v += field[x_1, y_2] * (x_2 - x) * (y - y_1)
+ *     v += field[x_2, y_1] * (x - x_1) * (y_2 - y)             # <<<<<<<<<<<<<<
+ *     v += field[x_2, y_2] * (x - x_1) * (y - y_1)
  *     return v
  */
   __pyx_t_5 = __pyx_v_x_2;
   __pyx_t_6 = __pyx_v_y_1;
-  __pyx_v_v = (__pyx_v_v + (((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_field.data + __pyx_t_5 * __pyx_v_field.strides[0]) ) + __pyx_t_6 * __pyx_v_field.strides[1]) ))) * (__pyx_v_x_1 - __pyx_v_x)) * (__pyx_v_y_2 - __pyx_v_y)));
+  __pyx_v_v = (__pyx_v_v + (((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_field.data + __pyx_t_5 * __pyx_v_field.strides[0]) ) + __pyx_t_6 * __pyx_v_field.strides[1]) ))) * (__pyx_v_x - __pyx_v_x_1)) * (__pyx_v_y_2 - __pyx_v_y)));
 
-  /* "line_generation/generator.pyx":105
- *     v += field[x_1, y_2] * (x_2 - x) * (y_1 - y)
- *     v += field[x_2, y_1] * (x_1 - x) * (y_2 - y)
- *     v += field[x_2, y_2] * (x_1 - x) * (y_1 - y)             # <<<<<<<<<<<<<<
+  /* "line_generation/generator.pyx":142
+ *     v += field[x_1, y_2] * (x_2 - x) * (y - y_1)
+ *     v += field[x_2, y_1] * (x - x_1) * (y_2 - y)
+ *     v += field[x_2, y_2] * (x - x_1) * (y - y_1)             # <<<<<<<<<<<<<<
  *     return v
  * 
  */
   __pyx_t_7 = __pyx_v_x_2;
   __pyx_t_8 = __pyx_v_y_2;
-  __pyx_v_v = (__pyx_v_v + (((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_field.data + __pyx_t_7 * __pyx_v_field.strides[0]) ) + __pyx_t_8 * __pyx_v_field.strides[1]) ))) * (__pyx_v_x_1 - __pyx_v_x)) * (__pyx_v_y_1 - __pyx_v_y)));
+  __pyx_v_v = (__pyx_v_v + (((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_field.data + __pyx_t_7 * __pyx_v_field.strides[0]) ) + __pyx_t_8 * __pyx_v_field.strides[1]) ))) * (__pyx_v_x - __pyx_v_x_1)) * (__pyx_v_y - __pyx_v_y_1)));
 
-  /* "line_generation/generator.pyx":106
- *     v += field[x_2, y_1] * (x_1 - x) * (y_2 - y)
- *     v += field[x_2, y_2] * (x_1 - x) * (y_1 - y)
+  /* "line_generation/generator.pyx":143
+ *     v += field[x_2, y_1] * (x - x_1) * (y_2 - y)
+ *     v += field[x_2, y_2] * (x - x_1) * (y - y_1)
  *     return v             # <<<<<<<<<<<<<<
  * 
  * 
@@ -3618,7 +4127,7 @@ static double __pyx_f_15line_generation_9generator_bilinear_interpolation(__Pyx_
   __pyx_r = __pyx_v_v;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":90
+  /* "line_generation/generator.pyx":132
  * 
  * 
  * cdef double bilinear_interpolation(double[:, :] field, double x, double y):             # <<<<<<<<<<<<<<
@@ -3632,17 +4141,15 @@ static double __pyx_f_15line_generation_9generator_bilinear_interpolation(__Pyx_
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":110
+/* "line_generation/generator.pyx":146
  * 
- * #TODO make this function pretty
+ * 
  * cdef (double, double) calculate_next_move(double x, double y, double vx_previous, double vy_previous,             # <<<<<<<<<<<<<<
  *                         double[:, :] x_field, double[:, :] y_field, int[:, :] empty_elements):
- *     cdef int x_int = int(floor(x))
+ * 
  */
 
 static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calculate_next_move(double __pyx_v_x, double __pyx_v_y, double __pyx_v_vx_previous, double __pyx_v_vy_previous, __Pyx_memviewslice __pyx_v_x_field, __Pyx_memviewslice __pyx_v_y_field, __Pyx_memviewslice __pyx_v_empty_elements) {
-  int __pyx_v_x_int;
-  int __pyx_v_y_int;
   double __pyx_v_vx;
   double __pyx_v_vy;
   double __pyx_v_scalar_product;
@@ -3654,37 +4161,19 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calc
   double __pyx_t_4;
   __Pyx_RefNannySetupContext("calculate_next_move", 0);
 
-  /* "line_generation/generator.pyx":112
- * cdef (double, double) calculate_next_move(double x, double y, double vx_previous, double vy_previous,
+  /* "line_generation/generator.pyx":149
  *                         double[:, :] x_field, double[:, :] y_field, int[:, :] empty_elements):
- *     cdef int x_int = int(floor(x))             # <<<<<<<<<<<<<<
- *     cdef int y_int = int(floor(y))
  * 
- */
-  __pyx_v_x_int = ((int)floor(__pyx_v_x));
-
-  /* "line_generation/generator.pyx":113
- *                         double[:, :] x_field, double[:, :] y_field, int[:, :] empty_elements):
- *     cdef int x_int = int(floor(x))
- *     cdef int y_int = int(floor(y))             # <<<<<<<<<<<<<<
- * 
- *     if check_nearest_neighbours(x_int, y_int, empty_elements) < NEIGHBOUR_THRESHOLD:
- */
-  __pyx_v_y_int = ((int)floor(__pyx_v_y));
-
-  /* "line_generation/generator.pyx":115
- *     cdef int y_int = int(floor(y))
- * 
- *     if check_nearest_neighbours(x_int, y_int, empty_elements) < NEIGHBOUR_THRESHOLD:             # <<<<<<<<<<<<<<
+ *     if check_nearest_neighbours(<int>x, <int>y, empty_elements) < NEIGHBOUR_THRESHOLD:             # <<<<<<<<<<<<<<
  *         return 10, 0
  * 
  */
-  __pyx_t_1 = ((__pyx_f_15line_generation_9generator_check_nearest_neighbours(__pyx_v_x_int, __pyx_v_y_int, __pyx_v_empty_elements) < __pyx_v_15line_generation_9generator_NEIGHBOUR_THRESHOLD) != 0);
+  __pyx_t_1 = ((__pyx_f_15line_generation_9generator_check_nearest_neighbours(((int)__pyx_v_x), ((int)__pyx_v_y), __pyx_v_empty_elements) < __pyx_v_15line_generation_9generator_NEIGHBOUR_THRESHOLD) != 0);
   if (__pyx_t_1) {
 
-    /* "line_generation/generator.pyx":116
+    /* "line_generation/generator.pyx":150
  * 
- *     if check_nearest_neighbours(x_int, y_int, empty_elements) < NEIGHBOUR_THRESHOLD:
+ *     if check_nearest_neighbours(<int>x, <int>y, empty_elements) < NEIGHBOUR_THRESHOLD:
  *         return 10, 0             # <<<<<<<<<<<<<<
  * 
  *     cdef double vx = bilinear_interpolation(x_field, x, y)
@@ -3694,48 +4183,48 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calc
     __pyx_r = __pyx_t_2;
     goto __pyx_L0;
 
-    /* "line_generation/generator.pyx":115
- *     cdef int y_int = int(floor(y))
+    /* "line_generation/generator.pyx":149
+ *                         double[:, :] x_field, double[:, :] y_field, int[:, :] empty_elements):
  * 
- *     if check_nearest_neighbours(x_int, y_int, empty_elements) < NEIGHBOUR_THRESHOLD:             # <<<<<<<<<<<<<<
+ *     if check_nearest_neighbours(<int>x, <int>y, empty_elements) < NEIGHBOUR_THRESHOLD:             # <<<<<<<<<<<<<<
  *         return 10, 0
  * 
  */
   }
 
-  /* "line_generation/generator.pyx":118
+  /* "line_generation/generator.pyx":152
  *         return 10, 0
  * 
  *     cdef double vx = bilinear_interpolation(x_field, x, y)             # <<<<<<<<<<<<<<
  *     cdef double vy = bilinear_interpolation(y_field, x, y)
- *     vx, vy = normalize(vx, vy)
+ *     # TODO investigate why this has to be swapped for it to work
  */
   __pyx_v_vx = __pyx_f_15line_generation_9generator_bilinear_interpolation(__pyx_v_x_field, __pyx_v_x, __pyx_v_y);
 
-  /* "line_generation/generator.pyx":119
+  /* "line_generation/generator.pyx":153
  * 
  *     cdef double vx = bilinear_interpolation(x_field, x, y)
  *     cdef double vy = bilinear_interpolation(y_field, x, y)             # <<<<<<<<<<<<<<
- *     vx, vy = normalize(vx, vy)
- * 
+ *     # TODO investigate why this has to be swapped for it to work
+ *     vy, vx = normalize(vx, vy)
  */
   __pyx_v_vy = __pyx_f_15line_generation_9generator_bilinear_interpolation(__pyx_v_y_field, __pyx_v_x, __pyx_v_y);
 
-  /* "line_generation/generator.pyx":120
- *     cdef double vx = bilinear_interpolation(x_field, x, y)
+  /* "line_generation/generator.pyx":155
  *     cdef double vy = bilinear_interpolation(y_field, x, y)
- *     vx, vy = normalize(vx, vy)             # <<<<<<<<<<<<<<
+ *     # TODO investigate why this has to be swapped for it to work
+ *     vy, vx = normalize(vx, vy)             # <<<<<<<<<<<<<<
  * 
  *     cdef double scalar_product = vx_previous * vx + vy_previous * vy
  */
   __pyx_t_2 = __pyx_f_15line_generation_9generator_normalize(__pyx_v_vx, __pyx_v_vy);
   __pyx_t_3 = __pyx_t_2.f0;
   __pyx_t_4 = __pyx_t_2.f1;
-  __pyx_v_vx = __pyx_t_3;
-  __pyx_v_vy = __pyx_t_4;
+  __pyx_v_vy = __pyx_t_3;
+  __pyx_v_vx = __pyx_t_4;
 
-  /* "line_generation/generator.pyx":122
- *     vx, vy = normalize(vx, vy)
+  /* "line_generation/generator.pyx":157
+ *     vy, vx = normalize(vx, vy)
  * 
  *     cdef double scalar_product = vx_previous * vx + vy_previous * vy             # <<<<<<<<<<<<<<
  *     if scalar_product < 0:
@@ -3743,7 +4232,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calc
  */
   __pyx_v_scalar_product = ((__pyx_v_vx_previous * __pyx_v_vx) + (__pyx_v_vy_previous * __pyx_v_vy));
 
-  /* "line_generation/generator.pyx":123
+  /* "line_generation/generator.pyx":158
  * 
  *     cdef double scalar_product = vx_previous * vx + vy_previous * vy
  *     if scalar_product < 0:             # <<<<<<<<<<<<<<
@@ -3753,7 +4242,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calc
   __pyx_t_1 = ((__pyx_v_scalar_product < 0.0) != 0);
   if (__pyx_t_1) {
 
-    /* "line_generation/generator.pyx":124
+    /* "line_generation/generator.pyx":159
  *     cdef double scalar_product = vx_previous * vx + vy_previous * vy
  *     if scalar_product < 0:
  *         return -vx, -vy             # <<<<<<<<<<<<<<
@@ -3765,7 +4254,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calc
     __pyx_r = __pyx_t_2;
     goto __pyx_L0;
 
-    /* "line_generation/generator.pyx":123
+    /* "line_generation/generator.pyx":158
  * 
  *     cdef double scalar_product = vx_previous * vx + vy_previous * vy
  *     if scalar_product < 0:             # <<<<<<<<<<<<<<
@@ -3774,7 +4263,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calc
  */
   }
 
-  /* "line_generation/generator.pyx":126
+  /* "line_generation/generator.pyx":161
  *         return -vx, -vy
  *     else:
  *         return vx, vy             # <<<<<<<<<<<<<<
@@ -3788,12 +4277,12 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calc
     goto __pyx_L0;
   }
 
-  /* "line_generation/generator.pyx":110
+  /* "line_generation/generator.pyx":146
  * 
- * #TODO make this function pretty
+ * 
  * cdef (double, double) calculate_next_move(double x, double y, double vx_previous, double vy_previous,             # <<<<<<<<<<<<<<
  *                         double[:, :] x_field, double[:, :] y_field, int[:, :] empty_elements):
- *     cdef int x_int = int(floor(x))
+ * 
  */
 
   /* function exit code */
@@ -3802,7 +4291,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_calc
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":129
+/* "line_generation/generator.pyx":164
  * 
  * 
  * cdef int fill_nearest_neighbours(double x_current, double y_current, int[:, :] filled_elements,             # <<<<<<<<<<<<<<
@@ -3830,7 +4319,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
   Py_ssize_t __pyx_t_10;
   __Pyx_RefNannySetupContext("fill_nearest_neighbours", 0);
 
-  /* "line_generation/generator.pyx":131
+  /* "line_generation/generator.pyx":166
  * cdef int fill_nearest_neighbours(double x_current, double y_current, int[:, :] filled_elements,
  *                          double line_width, int x_size, int y_size):
  *     cdef int x_pos = <int>round(x_current)             # <<<<<<<<<<<<<<
@@ -3839,7 +4328,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
  */
   __pyx_v_x_pos = ((int)round(__pyx_v_x_current));
 
-  /* "line_generation/generator.pyx":132
+  /* "line_generation/generator.pyx":167
  *                          double line_width, int x_size, int y_size):
  *     cdef int x_pos = <int>round(x_current)
  *     cdef int y_pos = <int>round(y_current)             # <<<<<<<<<<<<<<
@@ -3848,7 +4337,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
  */
   __pyx_v_y_pos = ((int)round(__pyx_v_y_current));
 
-  /* "line_generation/generator.pyx":133
+  /* "line_generation/generator.pyx":168
  *     cdef int x_pos = <int>round(x_current)
  *     cdef int y_pos = <int>round(y_current)
  *     cdef int limit = <int>ceil(line_width)             # <<<<<<<<<<<<<<
@@ -3857,7 +4346,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
  */
   __pyx_v_limit = ((int)ceil(__pyx_v_line_width));
 
-  /* "line_generation/generator.pyx":135
+  /* "line_generation/generator.pyx":170
  *     cdef int limit = <int>ceil(line_width)
  * 
  *     cdef int i = 0             # <<<<<<<<<<<<<<
@@ -3866,7 +4355,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
  */
   __pyx_v_i = 0;
 
-  /* "line_generation/generator.pyx":136
+  /* "line_generation/generator.pyx":171
  * 
  *     cdef int i = 0
  *     cdef int j = 0             # <<<<<<<<<<<<<<
@@ -3875,7 +4364,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
  */
   __pyx_v_j = 0;
 
-  /* "line_generation/generator.pyx":137
+  /* "line_generation/generator.pyx":172
  *     cdef int i = 0
  *     cdef int j = 0
  *     for i in range(-limit, limit):             # <<<<<<<<<<<<<<
@@ -3887,7 +4376,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
   for (__pyx_t_3 = (-__pyx_v_limit); __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "line_generation/generator.pyx":138
+    /* "line_generation/generator.pyx":173
  *     cdef int j = 0
  *     for i in range(-limit, limit):
  *         for j in range(-limit, limit):             # <<<<<<<<<<<<<<
@@ -3899,7 +4388,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
     for (__pyx_t_6 = (-__pyx_v_limit); __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "line_generation/generator.pyx":139
+      /* "line_generation/generator.pyx":174
  *     for i in range(-limit, limit):
  *         for j in range(-limit, limit):
  *             if (x_pos + i - x_current) ** 2 + (y_pos + j - y_current) ** 2 < line_width ** 2 and \             # <<<<<<<<<<<<<<
@@ -3913,7 +4402,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
         goto __pyx_L8_bool_binop_done;
       }
 
-      /* "line_generation/generator.pyx":140
+      /* "line_generation/generator.pyx":175
  *         for j in range(-limit, limit):
  *             if (x_pos + i - x_current) ** 2 + (y_pos + j - y_current) ** 2 < line_width ** 2 and \
  *                     check_index(x_size, y_size, x_pos + i, y_pos + j):             # <<<<<<<<<<<<<<
@@ -3924,7 +4413,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
       __pyx_t_7 = __pyx_t_8;
       __pyx_L8_bool_binop_done:;
 
-      /* "line_generation/generator.pyx":139
+      /* "line_generation/generator.pyx":174
  *     for i in range(-limit, limit):
  *         for j in range(-limit, limit):
  *             if (x_pos + i - x_current) ** 2 + (y_pos + j - y_current) ** 2 < line_width ** 2 and \             # <<<<<<<<<<<<<<
@@ -3933,7 +4422,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
  */
       if (__pyx_t_7) {
 
-        /* "line_generation/generator.pyx":141
+        /* "line_generation/generator.pyx":176
  *             if (x_pos + i - x_current) ** 2 + (y_pos + j - y_current) ** 2 < line_width ** 2 and \
  *                     check_index(x_size, y_size, x_pos + i, y_pos + j):
  *                 filled_elements[x_pos + i, y_pos + j] += 1             # <<<<<<<<<<<<<<
@@ -3944,7 +4433,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
         __pyx_t_10 = (__pyx_v_y_pos + __pyx_v_j);
         *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_filled_elements.data + __pyx_t_9 * __pyx_v_filled_elements.strides[0]) ) + __pyx_t_10 * __pyx_v_filled_elements.strides[1]) )) += 1;
 
-        /* "line_generation/generator.pyx":139
+        /* "line_generation/generator.pyx":174
  *     for i in range(-limit, limit):
  *         for j in range(-limit, limit):
  *             if (x_pos + i - x_current) ** 2 + (y_pos + j - y_current) ** 2 < line_width ** 2 and \             # <<<<<<<<<<<<<<
@@ -3955,7 +4444,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
     }
   }
 
-  /* "line_generation/generator.pyx":142
+  /* "line_generation/generator.pyx":177
  *                     check_index(x_size, y_size, x_pos + i, y_pos + j):
  *                 filled_elements[x_pos + i, y_pos + j] += 1
  *     return 0             # <<<<<<<<<<<<<<
@@ -3965,7 +4454,7 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":129
+  /* "line_generation/generator.pyx":164
  * 
  * 
  * cdef int fill_nearest_neighbours(double x_current, double y_current, int[:, :] filled_elements,             # <<<<<<<<<<<<<<
@@ -3979,119 +4468,53 @@ static int __pyx_f_15line_generation_9generator_fill_nearest_neighbours(double _
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":145
+/* "line_generation/generator.pyx":180
  * 
  * 
  * cdef int check_moving_forward(double distance, double scalar_product, double line_width, double distance_coefficient,             # <<<<<<<<<<<<<<
- *                               int[:, :] filled_elements, double x_current, double y_current):
+ *                               int[:, :] filled_elements, double x_current, double y_current, double min_line_separation):
  *     cdef int x_pos = <int>round(x_current)
  */
 
-static int __pyx_f_15line_generation_9generator_check_moving_forward(double __pyx_v_distance, double __pyx_v_scalar_product, double __pyx_v_line_width, double __pyx_v_distance_coefficient, __Pyx_memviewslice __pyx_v_filled_elements, double __pyx_v_x_current, double __pyx_v_y_current) {
+static int __pyx_f_15line_generation_9generator_check_moving_forward(CYTHON_UNUSED double __pyx_v_distance, CYTHON_UNUSED double __pyx_v_scalar_product, double __pyx_v_line_width, CYTHON_UNUSED double __pyx_v_distance_coefficient, __Pyx_memviewslice __pyx_v_filled_elements, double __pyx_v_x_current, double __pyx_v_y_current, double __pyx_v_min_line_separation) {
   int __pyx_v_x_pos;
   int __pyx_v_y_pos;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  int __pyx_t_2;
   __Pyx_RefNannySetupContext("check_moving_forward", 0);
 
-  /* "line_generation/generator.pyx":147
+  /* "line_generation/generator.pyx":182
  * cdef int check_moving_forward(double distance, double scalar_product, double line_width, double distance_coefficient,
- *                               int[:, :] filled_elements, double x_current, double y_current):
+ *                               int[:, :] filled_elements, double x_current, double y_current, double min_line_separation):
  *     cdef int x_pos = <int>round(x_current)             # <<<<<<<<<<<<<<
  *     cdef int y_pos = <int>round(y_current)
  * 
  */
   __pyx_v_x_pos = ((int)round(__pyx_v_x_current));
 
-  /* "line_generation/generator.pyx":148
- *                               int[:, :] filled_elements, double x_current, double y_current):
+  /* "line_generation/generator.pyx":183
+ *                               int[:, :] filled_elements, double x_current, double y_current, double min_line_separation):
  *     cdef int x_pos = <int>round(x_current)
  *     cdef int y_pos = <int>round(y_current)             # <<<<<<<<<<<<<<
  * 
- *     if distance > 0 and ((scalar_product < 1 - ANGLE_THRESHOLD) or (distance >
+ *     # if distance > 0 and ((scalar_product < 1 - ANGLE_THRESHOLD) or (distance >
  */
   __pyx_v_y_pos = ((int)round(__pyx_v_y_current));
 
-  /* "line_generation/generator.pyx":150
- *     cdef int y_pos = <int>round(y_current)
- * 
- *     if distance > 0 and ((scalar_product < 1 - ANGLE_THRESHOLD) or (distance >             # <<<<<<<<<<<<<<
- *         MIN_SEGMENT_NUMBER * line_width and distance_coefficient > MIN_DISTANCE_COEFFICIENT * line_width)):
- * 
- */
-  __pyx_t_2 = ((__pyx_v_distance > 0.0) != 0);
-  if (__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L4_bool_binop_done;
-  }
-  __pyx_t_2 = ((__pyx_v_scalar_product < (1.0 - __pyx_v_15line_generation_9generator_ANGLE_THRESHOLD)) != 0);
-  if (!__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L4_bool_binop_done;
-  }
-
-  /* "line_generation/generator.pyx":151
- * 
- *     if distance > 0 and ((scalar_product < 1 - ANGLE_THRESHOLD) or (distance >
- *         MIN_SEGMENT_NUMBER * line_width and distance_coefficient > MIN_DISTANCE_COEFFICIENT * line_width)):             # <<<<<<<<<<<<<<
- * 
- *         return 0
- */
-  __pyx_t_2 = ((__pyx_v_distance > (__pyx_v_15line_generation_9generator_MIN_SEGMENT_NUMBER * __pyx_v_line_width)) != 0);
-  if (__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L4_bool_binop_done;
-  }
-  __pyx_t_2 = ((__pyx_v_distance_coefficient > (__pyx_v_15line_generation_9generator_MIN_DISTANCE_COEFFICIENT * __pyx_v_line_width)) != 0);
-  __pyx_t_1 = __pyx_t_2;
-  __pyx_L4_bool_binop_done:;
-
-  /* "line_generation/generator.pyx":150
- *     cdef int y_pos = <int>round(y_current)
- * 
- *     if distance > 0 and ((scalar_product < 1 - ANGLE_THRESHOLD) or (distance >             # <<<<<<<<<<<<<<
- *         MIN_SEGMENT_NUMBER * line_width and distance_coefficient > MIN_DISTANCE_COEFFICIENT * line_width)):
- * 
- */
-  if (__pyx_t_1) {
-
-    /* "line_generation/generator.pyx":153
- *         MIN_SEGMENT_NUMBER * line_width and distance_coefficient > MIN_DISTANCE_COEFFICIENT * line_width)):
- * 
- *         return 0             # <<<<<<<<<<<<<<
- *     elif not check_proximity(filled_elements, line_width * MIN_LINE_SEPARATION, x_pos, y_pos):
- *         return 0
- */
-    __pyx_r = 0;
-    goto __pyx_L0;
-
-    /* "line_generation/generator.pyx":150
- *     cdef int y_pos = <int>round(y_current)
- * 
- *     if distance > 0 and ((scalar_product < 1 - ANGLE_THRESHOLD) or (distance >             # <<<<<<<<<<<<<<
- *         MIN_SEGMENT_NUMBER * line_width and distance_coefficient > MIN_DISTANCE_COEFFICIENT * line_width)):
- * 
- */
-  }
-
-  /* "line_generation/generator.pyx":154
- * 
- *         return 0
- *     elif not check_proximity(filled_elements, line_width * MIN_LINE_SEPARATION, x_pos, y_pos):             # <<<<<<<<<<<<<<
+  /* "line_generation/generator.pyx":190
+ *     #     return 0
+ *     # elif not check_proximity(filled_elements, line_width * min_line_separation, x_pos, y_pos):
+ *     if not check_proximity(filled_elements, line_width * min_line_separation, x_pos, y_pos):             # <<<<<<<<<<<<<<
  *         return 0
  *     else:
  */
-  __pyx_t_1 = ((!(__pyx_f_15line_generation_9generator_check_proximity(__pyx_v_filled_elements, (__pyx_v_line_width * __pyx_v_15line_generation_9generator_MIN_LINE_SEPARATION), __pyx_v_x_pos, __pyx_v_y_pos, NULL) != 0)) != 0);
+  __pyx_t_1 = ((!(__pyx_f_15line_generation_9generator_check_proximity(__pyx_v_filled_elements, (__pyx_v_line_width * __pyx_v_min_line_separation), __pyx_v_x_pos, __pyx_v_y_pos, NULL) != 0)) != 0);
   if (__pyx_t_1) {
 
-    /* "line_generation/generator.pyx":155
- *         return 0
- *     elif not check_proximity(filled_elements, line_width * MIN_LINE_SEPARATION, x_pos, y_pos):
+    /* "line_generation/generator.pyx":191
+ *     # elif not check_proximity(filled_elements, line_width * min_line_separation, x_pos, y_pos):
+ *     if not check_proximity(filled_elements, line_width * min_line_separation, x_pos, y_pos):
  *         return 0             # <<<<<<<<<<<<<<
  *     else:
  *         return 1
@@ -4099,16 +4522,16 @@ static int __pyx_f_15line_generation_9generator_check_moving_forward(double __py
     __pyx_r = 0;
     goto __pyx_L0;
 
-    /* "line_generation/generator.pyx":154
- * 
- *         return 0
- *     elif not check_proximity(filled_elements, line_width * MIN_LINE_SEPARATION, x_pos, y_pos):             # <<<<<<<<<<<<<<
+    /* "line_generation/generator.pyx":190
+ *     #     return 0
+ *     # elif not check_proximity(filled_elements, line_width * min_line_separation, x_pos, y_pos):
+ *     if not check_proximity(filled_elements, line_width * min_line_separation, x_pos, y_pos):             # <<<<<<<<<<<<<<
  *         return 0
  *     else:
  */
   }
 
-  /* "line_generation/generator.pyx":157
+  /* "line_generation/generator.pyx":193
  *         return 0
  *     else:
  *         return 1             # <<<<<<<<<<<<<<
@@ -4120,11 +4543,11 @@ static int __pyx_f_15line_generation_9generator_check_moving_forward(double __py
     goto __pyx_L0;
   }
 
-  /* "line_generation/generator.pyx":145
+  /* "line_generation/generator.pyx":180
  * 
  * 
  * cdef int check_moving_forward(double distance, double scalar_product, double line_width, double distance_coefficient,             # <<<<<<<<<<<<<<
- *                               int[:, :] filled_elements, double x_current, double y_current):
+ *                               int[:, :] filled_elements, double x_current, double y_current, double min_line_separation):
  *     cdef int x_pos = <int>round(x_current)
  */
 
@@ -4134,15 +4557,15 @@ static int __pyx_f_15line_generation_9generator_check_moving_forward(double __py
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":160
+/* "line_generation/generator.pyx":196
  * 
  * 
  * cdef (double, double) add_line(double x_current, double y_current, double x_start, double y_start, double vx, double vy,             # <<<<<<<<<<<<<<
- *                                double line_width, int[:, :] previously_filled_elements):
+ *                                double line_width, int[:, :] previously_filled_elements, double min_line_separation):
  * 
  */
 
-static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_line(double __pyx_v_x_current, double __pyx_v_y_current, double __pyx_v_x_start, double __pyx_v_y_start, double __pyx_v_vx, double __pyx_v_vy, double __pyx_v_line_width, __Pyx_memviewslice __pyx_v_previously_filled_elements) {
+static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_line(double __pyx_v_x_current, double __pyx_v_y_current, double __pyx_v_x_start, double __pyx_v_y_start, double __pyx_v_vx, double __pyx_v_vy, double __pyx_v_line_width, __Pyx_memviewslice __pyx_v_previously_filled_elements, double __pyx_v_min_line_separation) {
   double __pyx_v_distance_from_start;
   double __pyx_v_vx_dir;
   double __pyx_v_vy_dir;
@@ -4155,8 +4578,8 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
   __pyx_ctuple_double__and_double __pyx_t_2;
   __Pyx_RefNannySetupContext("add_line", 0);
 
-  /* "line_generation/generator.pyx":163
- *                                double line_width, int[:, :] previously_filled_elements):
+  /* "line_generation/generator.pyx":199
+ *                                double line_width, int[:, :] previously_filled_elements, double min_line_separation):
  * 
  *     cdef double distance_from_start = norm(x_current - x_start, y_current - y_start)             # <<<<<<<<<<<<<<
  *     cdef double vx_dir = (x_current - x_start) / distance_from_start
@@ -4164,7 +4587,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
  */
   __pyx_v_distance_from_start = __pyx_f_15line_generation_9generator_norm((__pyx_v_x_current - __pyx_v_x_start), (__pyx_v_y_current - __pyx_v_y_start));
 
-  /* "line_generation/generator.pyx":164
+  /* "line_generation/generator.pyx":200
  * 
  *     cdef double distance_from_start = norm(x_current - x_start, y_current - y_start)
  *     cdef double vx_dir = (x_current - x_start) / distance_from_start             # <<<<<<<<<<<<<<
@@ -4173,7 +4596,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
  */
   __pyx_v_vx_dir = ((__pyx_v_x_current - __pyx_v_x_start) / __pyx_v_distance_from_start);
 
-  /* "line_generation/generator.pyx":165
+  /* "line_generation/generator.pyx":201
  *     cdef double distance_from_start = norm(x_current - x_start, y_current - y_start)
  *     cdef double vx_dir = (x_current - x_start) / distance_from_start
  *     cdef double vy_dir = (y_current - y_start) / distance_from_start             # <<<<<<<<<<<<<<
@@ -4182,7 +4605,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
  */
   __pyx_v_vy_dir = ((__pyx_v_y_current - __pyx_v_y_start) / __pyx_v_distance_from_start);
 
-  /* "line_generation/generator.pyx":167
+  /* "line_generation/generator.pyx":203
  *     cdef double vy_dir = (y_current - y_start) / distance_from_start
  * 
  *     cdef double scalar_product = vx * vx_dir + vy * vy_dir             # <<<<<<<<<<<<<<
@@ -4191,7 +4614,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
  */
   __pyx_v_scalar_product = ((__pyx_v_vx * __pyx_v_vx_dir) + (__pyx_v_vy * __pyx_v_vy_dir));
 
-  /* "line_generation/generator.pyx":168
+  /* "line_generation/generator.pyx":204
  * 
  *     cdef double scalar_product = vx * vx_dir + vy * vy_dir
  *     cdef double distance_from_nearest_grid = norm(round(x_current) - x_current, round(y_current) - y_current)             # <<<<<<<<<<<<<<
@@ -4200,7 +4623,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
  */
   __pyx_v_distance_from_nearest_grid = __pyx_f_15line_generation_9generator_norm((round(__pyx_v_x_current) - __pyx_v_x_current), (round(__pyx_v_y_current) - __pyx_v_y_current));
 
-  /* "line_generation/generator.pyx":169
+  /* "line_generation/generator.pyx":205
  *     cdef double scalar_product = vx * vx_dir + vy * vy_dir
  *     cdef double distance_from_nearest_grid = norm(round(x_current) - x_current, round(y_current) - y_current)
  *     cdef double distance_coefficient = distance_from_nearest_grid / distance_from_start             # <<<<<<<<<<<<<<
@@ -4209,19 +4632,19 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
  */
   __pyx_v_distance_coefficient = (__pyx_v_distance_from_nearest_grid / __pyx_v_distance_from_start);
 
-  /* "line_generation/generator.pyx":171
+  /* "line_generation/generator.pyx":207
  *     cdef double distance_coefficient = distance_from_nearest_grid / distance_from_start
  * 
  *     if check_moving_forward(distance_from_start, scalar_product, line_width, distance_coefficient,             # <<<<<<<<<<<<<<
- *                             previously_filled_elements, x_current, y_current):
+ *                             previously_filled_elements, x_current, y_current, min_line_separation):
  *         return x_current + vx, y_current + vy
  */
-  __pyx_t_1 = (__pyx_f_15line_generation_9generator_check_moving_forward(__pyx_v_distance_from_start, __pyx_v_scalar_product, __pyx_v_line_width, __pyx_v_distance_coefficient, __pyx_v_previously_filled_elements, __pyx_v_x_current, __pyx_v_y_current) != 0);
+  __pyx_t_1 = (__pyx_f_15line_generation_9generator_check_moving_forward(__pyx_v_distance_from_start, __pyx_v_scalar_product, __pyx_v_line_width, __pyx_v_distance_coefficient, __pyx_v_previously_filled_elements, __pyx_v_x_current, __pyx_v_y_current, __pyx_v_min_line_separation) != 0);
   if (__pyx_t_1) {
 
-    /* "line_generation/generator.pyx":173
+    /* "line_generation/generator.pyx":209
  *     if check_moving_forward(distance_from_start, scalar_product, line_width, distance_coefficient,
- *                             previously_filled_elements, x_current, y_current):
+ *                             previously_filled_elements, x_current, y_current, min_line_separation):
  *         return x_current + vx, y_current + vy             # <<<<<<<<<<<<<<
  *     else:
  *         return x_current, y_current
@@ -4231,16 +4654,16 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
     __pyx_r = __pyx_t_2;
     goto __pyx_L0;
 
-    /* "line_generation/generator.pyx":171
+    /* "line_generation/generator.pyx":207
  *     cdef double distance_coefficient = distance_from_nearest_grid / distance_from_start
  * 
  *     if check_moving_forward(distance_from_start, scalar_product, line_width, distance_coefficient,             # <<<<<<<<<<<<<<
- *                             previously_filled_elements, x_current, y_current):
+ *                             previously_filled_elements, x_current, y_current, min_line_separation):
  *         return x_current + vx, y_current + vy
  */
   }
 
-  /* "line_generation/generator.pyx":175
+  /* "line_generation/generator.pyx":211
  *         return x_current + vx, y_current + vy
  *     else:
  *         return x_current, y_current             # <<<<<<<<<<<<<<
@@ -4254,11 +4677,11 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
     goto __pyx_L0;
   }
 
-  /* "line_generation/generator.pyx":160
+  /* "line_generation/generator.pyx":196
  * 
  * 
  * cdef (double, double) add_line(double x_current, double y_current, double x_start, double y_start, double vx, double vy,             # <<<<<<<<<<<<<<
- *                                double line_width, int[:, :] previously_filled_elements):
+ *                                double line_width, int[:, :] previously_filled_elements, double min_line_separation):
  * 
  */
 
@@ -4268,7 +4691,7 @@ static __pyx_ctuple_double__and_double __pyx_f_15line_generation_9generator_add_
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":179
+/* "line_generation/generator.pyx":215
  * 
  * 
  * cdef int update_empty_elements(int[:, :] empty_elements, int[:, :] filled_elements):             # <<<<<<<<<<<<<<
@@ -4293,7 +4716,7 @@ static int __pyx_f_15line_generation_9generator_update_empty_elements(__Pyx_memv
   Py_ssize_t __pyx_t_10;
   __Pyx_RefNannySetupContext("update_empty_elements", 0);
 
-  /* "line_generation/generator.pyx":180
+  /* "line_generation/generator.pyx":216
  * 
  * cdef int update_empty_elements(int[:, :] empty_elements, int[:, :] filled_elements):
  *     cdef int i = 0             # <<<<<<<<<<<<<<
@@ -4302,7 +4725,7 @@ static int __pyx_f_15line_generation_9generator_update_empty_elements(__Pyx_memv
  */
   __pyx_v_i = 0;
 
-  /* "line_generation/generator.pyx":181
+  /* "line_generation/generator.pyx":217
  * cdef int update_empty_elements(int[:, :] empty_elements, int[:, :] filled_elements):
  *     cdef int i = 0
  *     cdef int j = 0             # <<<<<<<<<<<<<<
@@ -4311,7 +4734,7 @@ static int __pyx_f_15line_generation_9generator_update_empty_elements(__Pyx_memv
  */
   __pyx_v_j = 0;
 
-  /* "line_generation/generator.pyx":182
+  /* "line_generation/generator.pyx":218
  *     cdef int i = 0
  *     cdef int j = 0
  *     for i in range(empty_elements.shape[0]):             # <<<<<<<<<<<<<<
@@ -4323,23 +4746,23 @@ static int __pyx_f_15line_generation_9generator_update_empty_elements(__Pyx_memv
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "line_generation/generator.pyx":183
+    /* "line_generation/generator.pyx":219
  *     cdef int j = 0
  *     for i in range(empty_elements.shape[0]):
  *         for j in range(empty_elements.shape[1]):             # <<<<<<<<<<<<<<
  *             empty_elements[i, j] -= filled_elements[i, j]
- *     normalize_matrix(empty_elements)
+ *     make_binary(empty_elements)
  */
     __pyx_t_4 = (__pyx_v_empty_elements.shape[1]);
     __pyx_t_5 = __pyx_t_4;
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "line_generation/generator.pyx":184
+      /* "line_generation/generator.pyx":220
  *     for i in range(empty_elements.shape[0]):
  *         for j in range(empty_elements.shape[1]):
  *             empty_elements[i, j] -= filled_elements[i, j]             # <<<<<<<<<<<<<<
- *     normalize_matrix(empty_elements)
+ *     make_binary(empty_elements)
  *     return 0
  */
       __pyx_t_7 = __pyx_v_i;
@@ -4350,18 +4773,18 @@ static int __pyx_f_15line_generation_9generator_update_empty_elements(__Pyx_memv
     }
   }
 
-  /* "line_generation/generator.pyx":185
+  /* "line_generation/generator.pyx":221
  *         for j in range(empty_elements.shape[1]):
  *             empty_elements[i, j] -= filled_elements[i, j]
- *     normalize_matrix(empty_elements)             # <<<<<<<<<<<<<<
+ *     make_binary(empty_elements)             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  (void)(__pyx_f_15line_generation_9generator_normalize_matrix(__pyx_v_empty_elements));
+  (void)(__pyx_f_15line_generation_9generator_make_binary(__pyx_v_empty_elements, NULL));
 
-  /* "line_generation/generator.pyx":186
+  /* "line_generation/generator.pyx":222
  *             empty_elements[i, j] -= filled_elements[i, j]
- *     normalize_matrix(empty_elements)
+ *     make_binary(empty_elements)
  *     return 0             # <<<<<<<<<<<<<<
  * 
  * 
@@ -4369,7 +4792,7 @@ static int __pyx_f_15line_generation_9generator_update_empty_elements(__Pyx_memv
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":179
+  /* "line_generation/generator.pyx":215
  * 
  * 
  * cdef int update_empty_elements(int[:, :] empty_elements, int[:, :] filled_elements):             # <<<<<<<<<<<<<<
@@ -4383,12 +4806,12 @@ static int __pyx_f_15line_generation_9generator_update_empty_elements(__Pyx_memv
   return __pyx_r;
 }
 
-/* "line_generation/generator.pyx":189
+/* "line_generation/generator.pyx":225
  * 
  * 
  * def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2] y_field,             # <<<<<<<<<<<<<<
  *                    np.ndarray[int, ndim=2] desired_shape, np.ndarray[int, ndim=2] perimeter,
- *                    printer: Printer):
+ *                    printer: Printer, double min_line_separation, str sorting):
  */
 
 /* Python wrapper */
@@ -4400,16 +4823,22 @@ static PyObject *__pyx_pw_15line_generation_9generator_1generate_lines(PyObject 
   PyArrayObject *__pyx_v_desired_shape = 0;
   PyArrayObject *__pyx_v_perimeter = 0;
   PyObject *__pyx_v_printer = 0;
+  double __pyx_v_min_line_separation;
+  PyObject *__pyx_v_sorting = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("generate_lines (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_x_field,&__pyx_n_s_y_field,&__pyx_n_s_desired_shape,&__pyx_n_s_perimeter,&__pyx_n_s_printer,0};
-    PyObject* values[5] = {0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_x_field,&__pyx_n_s_y_field,&__pyx_n_s_desired_shape,&__pyx_n_s_perimeter,&__pyx_n_s_printer,&__pyx_n_s_min_line_separation,&__pyx_n_s_sorting,0};
+    PyObject* values[7] = {0,0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+        CYTHON_FALLTHROUGH;
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
         case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
         CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
@@ -4432,31 +4861,43 @@ static PyObject *__pyx_pw_15line_generation_9generator_1generate_lines(PyObject 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_y_field)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 5, 5, 1); __PYX_ERR(0, 189, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 7, 7, 1); __PYX_ERR(0, 225, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_desired_shape)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 5, 5, 2); __PYX_ERR(0, 189, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 7, 7, 2); __PYX_ERR(0, 225, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_perimeter)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 5, 5, 3); __PYX_ERR(0, 189, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 7, 7, 3); __PYX_ERR(0, 225, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_printer)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 5, 5, 4); __PYX_ERR(0, 189, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 7, 7, 4); __PYX_ERR(0, 225, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_min_line_separation)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 7, 7, 5); __PYX_ERR(0, 225, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  6:
+        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_sorting)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 7, 7, 6); __PYX_ERR(0, 225, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "generate_lines") < 0)) __PYX_ERR(0, 189, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "generate_lines") < 0)) __PYX_ERR(0, 225, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 7) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -4464,26 +4905,31 @@ static PyObject *__pyx_pw_15line_generation_9generator_1generate_lines(PyObject 
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
     }
     __pyx_v_x_field = ((PyArrayObject *)values[0]);
     __pyx_v_y_field = ((PyArrayObject *)values[1]);
     __pyx_v_desired_shape = ((PyArrayObject *)values[2]);
     __pyx_v_perimeter = ((PyArrayObject *)values[3]);
     __pyx_v_printer = values[4];
+    __pyx_v_min_line_separation = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_min_line_separation == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L3_error)
+    __pyx_v_sorting = ((PyObject*)values[6]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 189, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("generate_lines", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 225, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("line_generation.generator.generate_lines", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x_field), __pyx_ptype_5numpy_ndarray, 1, "x_field", 0))) __PYX_ERR(0, 189, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y_field), __pyx_ptype_5numpy_ndarray, 1, "y_field", 0))) __PYX_ERR(0, 189, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_desired_shape), __pyx_ptype_5numpy_ndarray, 1, "desired_shape", 0))) __PYX_ERR(0, 190, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_perimeter), __pyx_ptype_5numpy_ndarray, 1, "perimeter", 0))) __PYX_ERR(0, 190, __pyx_L1_error)
-  __pyx_r = __pyx_pf_15line_generation_9generator_generate_lines(__pyx_self, __pyx_v_x_field, __pyx_v_y_field, __pyx_v_desired_shape, __pyx_v_perimeter, __pyx_v_printer);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_x_field), __pyx_ptype_5numpy_ndarray, 1, "x_field", 0))) __PYX_ERR(0, 225, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y_field), __pyx_ptype_5numpy_ndarray, 1, "y_field", 0))) __PYX_ERR(0, 225, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_desired_shape), __pyx_ptype_5numpy_ndarray, 1, "desired_shape", 0))) __PYX_ERR(0, 226, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_perimeter), __pyx_ptype_5numpy_ndarray, 1, "perimeter", 0))) __PYX_ERR(0, 226, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_sorting), (&PyUnicode_Type), 1, "sorting", 1))) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_r = __pyx_pf_15line_generation_9generator_generate_lines(__pyx_self, __pyx_v_x_field, __pyx_v_y_field, __pyx_v_desired_shape, __pyx_v_perimeter, __pyx_v_printer, __pyx_v_min_line_separation, __pyx_v_sorting);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4494,7 +4940,7 @@ static PyObject *__pyx_pw_15line_generation_9generator_1generate_lines(PyObject 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x_field, PyArrayObject *__pyx_v_y_field, PyArrayObject *__pyx_v_desired_shape, PyArrayObject *__pyx_v_perimeter, PyObject *__pyx_v_printer) {
+static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_x_field, PyArrayObject *__pyx_v_y_field, PyArrayObject *__pyx_v_desired_shape, PyArrayObject *__pyx_v_perimeter, PyObject *__pyx_v_printer, double __pyx_v_min_line_separation, PyObject *__pyx_v_sorting) {
   __Pyx_memviewslice __pyx_v_cperimeter = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_cx_field = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_cy_field = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -4512,6 +4958,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
   double __pyx_v_y_new;
   double __pyx_v_vx;
   double __pyx_v_vy;
+  int __pyx_v_last_index;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_desired_shape;
   __Pyx_Buffer __pyx_pybuffer_desired_shape;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_perimeter;
@@ -4557,83 +5004,83 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
   __pyx_pybuffernd_perimeter.rcbuffer = &__pyx_pybuffer_perimeter;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_x_field.rcbuffer->pybuffer, (PyObject*)__pyx_v_x_field, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 189, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_x_field.rcbuffer->pybuffer, (PyObject*)__pyx_v_x_field, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 225, __pyx_L1_error)
   }
   __pyx_pybuffernd_x_field.diminfo[0].strides = __pyx_pybuffernd_x_field.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_x_field.diminfo[0].shape = __pyx_pybuffernd_x_field.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_x_field.diminfo[1].strides = __pyx_pybuffernd_x_field.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_x_field.diminfo[1].shape = __pyx_pybuffernd_x_field.rcbuffer->pybuffer.shape[1];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_y_field.rcbuffer->pybuffer, (PyObject*)__pyx_v_y_field, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 189, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_y_field.rcbuffer->pybuffer, (PyObject*)__pyx_v_y_field, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 225, __pyx_L1_error)
   }
   __pyx_pybuffernd_y_field.diminfo[0].strides = __pyx_pybuffernd_y_field.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_y_field.diminfo[0].shape = __pyx_pybuffernd_y_field.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_y_field.diminfo[1].strides = __pyx_pybuffernd_y_field.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_y_field.diminfo[1].shape = __pyx_pybuffernd_y_field.rcbuffer->pybuffer.shape[1];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_desired_shape.rcbuffer->pybuffer, (PyObject*)__pyx_v_desired_shape, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 189, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_desired_shape.rcbuffer->pybuffer, (PyObject*)__pyx_v_desired_shape, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 225, __pyx_L1_error)
   }
   __pyx_pybuffernd_desired_shape.diminfo[0].strides = __pyx_pybuffernd_desired_shape.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_desired_shape.diminfo[0].shape = __pyx_pybuffernd_desired_shape.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_desired_shape.diminfo[1].strides = __pyx_pybuffernd_desired_shape.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_desired_shape.diminfo[1].shape = __pyx_pybuffernd_desired_shape.rcbuffer->pybuffer.shape[1];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_perimeter.rcbuffer->pybuffer, (PyObject*)__pyx_v_perimeter, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 189, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_perimeter.rcbuffer->pybuffer, (PyObject*)__pyx_v_perimeter, &__Pyx_TypeInfo_int, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 225, __pyx_L1_error)
   }
   __pyx_pybuffernd_perimeter.diminfo[0].strides = __pyx_pybuffernd_perimeter.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_perimeter.diminfo[0].shape = __pyx_pybuffernd_perimeter.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_perimeter.diminfo[1].strides = __pyx_pybuffernd_perimeter.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_perimeter.diminfo[1].shape = __pyx_pybuffernd_perimeter.rcbuffer->pybuffer.shape[1];
 
-  /* "line_generation/generator.pyx":192
+  /* "line_generation/generator.pyx":228
  *                    np.ndarray[int, ndim=2] desired_shape, np.ndarray[int, ndim=2] perimeter,
- *                    printer: Printer):
+ *                    printer: Printer, double min_line_separation, str sorting):
  *     cdef int[:, :] cperimeter = perimeter             # <<<<<<<<<<<<<<
  * 
  *     cdef double[:, :] cx_field = x_field
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(((PyObject *)__pyx_v_perimeter), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 192, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(((PyObject *)__pyx_v_perimeter), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 228, __pyx_L1_error)
   __pyx_v_cperimeter = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "line_generation/generator.pyx":194
+  /* "line_generation/generator.pyx":230
  *     cdef int[:, :] cperimeter = perimeter
  * 
  *     cdef double[:, :] cx_field = x_field             # <<<<<<<<<<<<<<
  *     cdef double[:, :] cy_field = y_field
- *     cdef int[:, :] empty_elements = desired_shape
+ * 
  */
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(((PyObject *)__pyx_v_x_field), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 194, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(((PyObject *)__pyx_v_x_field), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 230, __pyx_L1_error)
   __pyx_v_cx_field = __pyx_t_2;
   __pyx_t_2.memview = NULL;
   __pyx_t_2.data = NULL;
 
-  /* "line_generation/generator.pyx":195
+  /* "line_generation/generator.pyx":231
  * 
  *     cdef double[:, :] cx_field = x_field
  *     cdef double[:, :] cy_field = y_field             # <<<<<<<<<<<<<<
+ * 
  *     cdef int[:, :] empty_elements = desired_shape
- *     cdef int[:, :] filled_elements = np.zeros_like(desired_shape)
  */
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(((PyObject *)__pyx_v_y_field), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 195, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(((PyObject *)__pyx_v_y_field), PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 231, __pyx_L1_error)
   __pyx_v_cy_field = __pyx_t_2;
   __pyx_t_2.memview = NULL;
   __pyx_t_2.data = NULL;
 
-  /* "line_generation/generator.pyx":196
- *     cdef double[:, :] cx_field = x_field
+  /* "line_generation/generator.pyx":233
  *     cdef double[:, :] cy_field = y_field
+ * 
  *     cdef int[:, :] empty_elements = desired_shape             # <<<<<<<<<<<<<<
  *     cdef int[:, :] filled_elements = np.zeros_like(desired_shape)
  *     cdef int[:, :] previously_filled_elements = np.zeros_like(desired_shape)
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(((PyObject *)__pyx_v_desired_shape), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(((PyObject *)__pyx_v_desired_shape), PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 233, __pyx_L1_error)
   __pyx_v_empty_elements = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "line_generation/generator.pyx":197
- *     cdef double[:, :] cy_field = y_field
+  /* "line_generation/generator.pyx":234
+ * 
  *     cdef int[:, :] empty_elements = desired_shape
  *     cdef int[:, :] filled_elements = np.zeros_like(desired_shape)             # <<<<<<<<<<<<<<
  *     cdef int[:, :] previously_filled_elements = np.zeros_like(desired_shape)
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 197, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 234, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros_like); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 197, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros_like); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 234, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -4648,25 +5095,25 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
   }
   __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_4, ((PyObject *)__pyx_v_desired_shape)) : __Pyx_PyObject_CallOneArg(__pyx_t_5, ((PyObject *)__pyx_v_desired_shape));
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 197, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 234, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 197, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 234, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_filled_elements = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "line_generation/generator.pyx":198
+  /* "line_generation/generator.pyx":235
  *     cdef int[:, :] empty_elements = desired_shape
  *     cdef int[:, :] filled_elements = np.zeros_like(desired_shape)
  *     cdef int[:, :] previously_filled_elements = np.zeros_like(desired_shape)             # <<<<<<<<<<<<<<
  * 
  *     # TODO write line creation algorithm starting from perimeter
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 198, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 235, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros_like); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_zeros_like); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 235, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_5 = NULL;
@@ -4681,38 +5128,38 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
   }
   __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, ((PyObject *)__pyx_v_desired_shape)) : __Pyx_PyObject_CallOneArg(__pyx_t_4, ((PyObject *)__pyx_v_desired_shape));
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 198, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 235, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 235, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_previously_filled_elements = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "line_generation/generator.pyx":203
+  /* "line_generation/generator.pyx":240
  *     # TODO write empty spot finding algorithm that goes in both directions
  *     # TODO return list of lines
  *     cdef double line_width = printer.nozzle.line_width / printer.accuracy             # <<<<<<<<<<<<<<
  *     cdef int x_size = x_field.shape[0]
  *     cdef int y_size = y_field.shape[0]
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_printer, __pyx_n_s_nozzle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_printer, __pyx_n_s_nozzle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_line_width); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_line_width); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_printer, __pyx_n_s_accuracy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_printer, __pyx_n_s_accuracy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 240, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_line_width = __pyx_t_6;
 
-  /* "line_generation/generator.pyx":204
+  /* "line_generation/generator.pyx":241
  *     # TODO return list of lines
  *     cdef double line_width = printer.nozzle.line_width / printer.accuracy
  *     cdef int x_size = x_field.shape[0]             # <<<<<<<<<<<<<<
@@ -4721,7 +5168,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_x_size = (__pyx_v_x_field->dimensions[0]);
 
-  /* "line_generation/generator.pyx":205
+  /* "line_generation/generator.pyx":242
  *     cdef double line_width = printer.nozzle.line_width / printer.accuracy
  *     cdef int x_size = x_field.shape[0]
  *     cdef int y_size = y_field.shape[0]             # <<<<<<<<<<<<<<
@@ -4730,7 +5177,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_y_size = (__pyx_v_y_field->dimensions[0]);
 
-  /* "line_generation/generator.pyx":207
+  /* "line_generation/generator.pyx":244
  *     cdef int y_size = y_field.shape[0]
  * 
  *     cdef int x_start = 0             # <<<<<<<<<<<<<<
@@ -4739,7 +5186,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_x_start = 0;
 
-  /* "line_generation/generator.pyx":208
+  /* "line_generation/generator.pyx":245
  * 
  *     cdef int x_start = 0
  *     cdef int y_start = 0             # <<<<<<<<<<<<<<
@@ -4748,7 +5195,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_y_start = 0;
 
-  /* "line_generation/generator.pyx":209
+  /* "line_generation/generator.pyx":246
  *     cdef int x_start = 0
  *     cdef int y_start = 0
  *     cdef double x_pos = 0             # <<<<<<<<<<<<<<
@@ -4757,7 +5204,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_x_pos = 0.0;
 
-  /* "line_generation/generator.pyx":210
+  /* "line_generation/generator.pyx":247
  *     cdef int y_start = 0
  *     cdef double x_pos = 0
  *     cdef double y_pos = 0             # <<<<<<<<<<<<<<
@@ -4766,7 +5213,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_y_pos = 0.0;
 
-  /* "line_generation/generator.pyx":211
+  /* "line_generation/generator.pyx":248
  *     cdef double x_pos = 0
  *     cdef double y_pos = 0
  *     cdef double x_new = 0             # <<<<<<<<<<<<<<
@@ -4775,7 +5222,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_x_new = 0.0;
 
-  /* "line_generation/generator.pyx":212
+  /* "line_generation/generator.pyx":249
  *     cdef double y_pos = 0
  *     cdef double x_new = 0
  *     cdef double y_new = 0             # <<<<<<<<<<<<<<
@@ -4784,7 +5231,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_y_new = 0.0;
 
-  /* "line_generation/generator.pyx":213
+  /* "line_generation/generator.pyx":250
  *     cdef double x_new = 0
  *     cdef double y_new = 0
  *     cdef double vx = 0             # <<<<<<<<<<<<<<
@@ -4793,40 +5240,49 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
   __pyx_v_vx = 0.0;
 
-  /* "line_generation/generator.pyx":214
+  /* "line_generation/generator.pyx":251
  *     cdef double y_new = 0
  *     cdef double vx = 0
  *     cdef double vy = 0             # <<<<<<<<<<<<<<
  * 
- *     while True:
+ *     cdef int last_index = 0
  */
   __pyx_v_vy = 0.0;
 
-  /* "line_generation/generator.pyx":216
+  /* "line_generation/generator.pyx":253
  *     cdef double vy = 0
  * 
+ *     cdef int last_index = 0             # <<<<<<<<<<<<<<
+ * 
+ *     while True:
+ */
+  __pyx_v_last_index = 0;
+
+  /* "line_generation/generator.pyx":255
+ *     cdef int last_index = 0
+ * 
  *     while True:             # <<<<<<<<<<<<<<
- *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field, line_width)
- *         if x_start == 0 and y_start == 0:
+ *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field,
+ *                                                line_width, &last_index, sorting)
  */
   while (1) {
 
-    /* "line_generation/generator.pyx":217
+    /* "line_generation/generator.pyx":256
  * 
  *     while True:
- *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field, line_width)             # <<<<<<<<<<<<<<
+ *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field,             # <<<<<<<<<<<<<<
+ *                                                line_width, &last_index, sorting)
  *         if x_start == 0 and y_start == 0:
- *             break
  */
-    __pyx_t_7 = __pyx_f_15line_generation_9generator_find_next_perimeter(__pyx_v_cperimeter, __pyx_v_empty_elements, __pyx_v_filled_elements, __pyx_v_cx_field, __pyx_v_cy_field, __pyx_v_line_width);
+    __pyx_t_7 = __pyx_f_15line_generation_9generator_find_next_perimeter(__pyx_v_cperimeter, __pyx_v_empty_elements, __pyx_v_filled_elements, __pyx_v_cx_field, __pyx_v_cy_field, __pyx_v_line_width, (&__pyx_v_last_index), __pyx_v_sorting);
     __pyx_t_8 = __pyx_t_7.f0;
     __pyx_t_9 = __pyx_t_7.f1;
     __pyx_v_x_start = __pyx_t_8;
     __pyx_v_y_start = __pyx_t_9;
 
-    /* "line_generation/generator.pyx":218
- *     while True:
- *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field, line_width)
+    /* "line_generation/generator.pyx":258
+ *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field,
+ *                                                line_width, &last_index, sorting)
  *         if x_start == 0 and y_start == 0:             # <<<<<<<<<<<<<<
  *             break
  *         x_pos = x_start
@@ -4842,8 +5298,8 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_10) {
 
-      /* "line_generation/generator.pyx":219
- *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field, line_width)
+      /* "line_generation/generator.pyx":259
+ *                                                line_width, &last_index, sorting)
  *         if x_start == 0 and y_start == 0:
  *             break             # <<<<<<<<<<<<<<
  *         x_pos = x_start
@@ -4851,16 +5307,16 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
       goto __pyx_L4_break;
 
-      /* "line_generation/generator.pyx":218
- *     while True:
- *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field, line_width)
+      /* "line_generation/generator.pyx":258
+ *         x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field,
+ *                                                line_width, &last_index, sorting)
  *         if x_start == 0 and y_start == 0:             # <<<<<<<<<<<<<<
  *             break
  *         x_pos = x_start
  */
     }
 
-    /* "line_generation/generator.pyx":220
+    /* "line_generation/generator.pyx":260
  *         if x_start == 0 and y_start == 0:
  *             break
  *         x_pos = x_start             # <<<<<<<<<<<<<<
@@ -4869,7 +5325,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
     __pyx_v_x_pos = __pyx_v_x_start;
 
-    /* "line_generation/generator.pyx":221
+    /* "line_generation/generator.pyx":261
  *             break
  *         x_pos = x_start
  *         y_pos = y_start             # <<<<<<<<<<<<<<
@@ -4878,35 +5334,35 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
     __pyx_v_y_pos = __pyx_v_y_start;
 
-    /* "line_generation/generator.pyx":222
+    /* "line_generation/generator.pyx":262
  *         x_pos = x_start
  *         y_pos = y_start
  *         x_new = 0             # <<<<<<<<<<<<<<
  *         y_new = 0
- *         # vx = cx_field[x_start, y_start]
+ * 
  */
     __pyx_v_x_new = 0.0;
 
-    /* "line_generation/generator.pyx":223
+    /* "line_generation/generator.pyx":263
  *         y_pos = y_start
  *         x_new = 0
  *         y_new = 0             # <<<<<<<<<<<<<<
- *         # vx = cx_field[x_start, y_start]
- *         # vy = cy_field[x_start, y_start]
+ * 
+ *         vx = empty_elements.shape[0] / 2 - x_pos
  */
     __pyx_v_y_new = 0.0;
 
-    /* "line_generation/generator.pyx":226
- *         # vx = cx_field[x_start, y_start]
- *         # vy = cy_field[x_start, y_start]
+    /* "line_generation/generator.pyx":265
+ *         y_new = 0
+ * 
  *         vx = empty_elements.shape[0] / 2 - x_pos             # <<<<<<<<<<<<<<
  *         vy = empty_elements.shape[1] / 2 - y_pos
  *         previously_filled_elements[:] = filled_elements
  */
     __pyx_v_vx = (((__pyx_v_empty_elements.shape[0]) / 2) - __pyx_v_x_pos);
 
-    /* "line_generation/generator.pyx":227
- *         # vy = cy_field[x_start, y_start]
+    /* "line_generation/generator.pyx":266
+ * 
  *         vx = empty_elements.shape[0] / 2 - x_pos
  *         vy = empty_elements.shape[1] / 2 - y_pos             # <<<<<<<<<<<<<<
  *         previously_filled_elements[:] = filled_elements
@@ -4914,17 +5370,17 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
     __pyx_v_vy = (((__pyx_v_empty_elements.shape[1]) / 2) - __pyx_v_y_pos);
 
-    /* "line_generation/generator.pyx":228
+    /* "line_generation/generator.pyx":267
  *         vx = empty_elements.shape[0] / 2 - x_pos
  *         vy = empty_elements.shape[1] / 2 - y_pos
  *         previously_filled_elements[:] = filled_elements             # <<<<<<<<<<<<<<
  * 
- *         while empty_elements[<int>x_pos, <int>y_pos]:
+ * 
  */
-    if (unlikely(__pyx_memoryview_copy_contents(__pyx_v_filled_elements, __pyx_v_previously_filled_elements, 2, 2, 0) < 0)) __PYX_ERR(0, 228, __pyx_L1_error)
+    if (unlikely(__pyx_memoryview_copy_contents(__pyx_v_filled_elements, __pyx_v_previously_filled_elements, 2, 2, 0) < 0)) __PYX_ERR(0, 267, __pyx_L1_error)
 
-    /* "line_generation/generator.pyx":230
- *         previously_filled_elements[:] = filled_elements
+    /* "line_generation/generator.pyx":270
+ * 
  * 
  *         while empty_elements[<int>x_pos, <int>y_pos]:             # <<<<<<<<<<<<<<
  *             vx, vy = calculate_next_move(x_pos, y_pos, vx, vy, cx_field, cy_field, empty_elements)
@@ -4936,7 +5392,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
       __pyx_t_10 = ((*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_empty_elements.data + __pyx_t_12 * __pyx_v_empty_elements.strides[0]) ) + __pyx_t_13 * __pyx_v_empty_elements.strides[1]) ))) != 0);
       if (!__pyx_t_10) break;
 
-      /* "line_generation/generator.pyx":231
+      /* "line_generation/generator.pyx":271
  * 
  *         while empty_elements[<int>x_pos, <int>y_pos]:
  *             vx, vy = calculate_next_move(x_pos, y_pos, vx, vy, cx_field, cy_field, empty_elements)             # <<<<<<<<<<<<<<
@@ -4949,7 +5405,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
       __pyx_v_vx = __pyx_t_6;
       __pyx_v_vy = __pyx_t_15;
 
-      /* "line_generation/generator.pyx":232
+      /* "line_generation/generator.pyx":272
  *         while empty_elements[<int>x_pos, <int>y_pos]:
  *             vx, vy = calculate_next_move(x_pos, y_pos, vx, vy, cx_field, cy_field, empty_elements)
  *             if vx == 10:             # <<<<<<<<<<<<<<
@@ -4959,7 +5415,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
       __pyx_t_10 = ((__pyx_v_vx == 10.0) != 0);
       if (__pyx_t_10) {
 
-        /* "line_generation/generator.pyx":233
+        /* "line_generation/generator.pyx":273
  *             vx, vy = calculate_next_move(x_pos, y_pos, vx, vy, cx_field, cy_field, empty_elements)
  *             if vx == 10:
  *                 fill_nearest_neighbours(x_pos, y_pos, filled_elements, line_width, x_size, y_size)             # <<<<<<<<<<<<<<
@@ -4968,16 +5424,16 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
         (void)(__pyx_f_15line_generation_9generator_fill_nearest_neighbours(__pyx_v_x_pos, __pyx_v_y_pos, __pyx_v_filled_elements, __pyx_v_line_width, __pyx_v_x_size, __pyx_v_y_size));
 
-        /* "line_generation/generator.pyx":234
+        /* "line_generation/generator.pyx":274
  *             if vx == 10:
  *                 fill_nearest_neighbours(x_pos, y_pos, filled_elements, line_width, x_size, y_size)
  *                 break             # <<<<<<<<<<<<<<
  * 
- *             x_new, y_new = add_line(x_pos, y_pos, x_start, y_start, vx, vy, line_width, previously_filled_elements)
+ *             x_new, y_new = add_line(x_pos, y_pos, x_start, y_start, vx, vy, line_width, previously_filled_elements,
  */
         goto __pyx_L9_break;
 
-        /* "line_generation/generator.pyx":232
+        /* "line_generation/generator.pyx":272
  *         while empty_elements[<int>x_pos, <int>y_pos]:
  *             vx, vy = calculate_next_move(x_pos, y_pos, vx, vy, cx_field, cy_field, empty_elements)
  *             if vx == 10:             # <<<<<<<<<<<<<<
@@ -4986,29 +5442,29 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
       }
 
-      /* "line_generation/generator.pyx":236
+      /* "line_generation/generator.pyx":276
  *                 break
  * 
- *             x_new, y_new = add_line(x_pos, y_pos, x_start, y_start, vx, vy, line_width, previously_filled_elements)             # <<<<<<<<<<<<<<
+ *             x_new, y_new = add_line(x_pos, y_pos, x_start, y_start, vx, vy, line_width, previously_filled_elements,             # <<<<<<<<<<<<<<
+ *                                     min_line_separation)
  *             fill_nearest_neighbours(x_new, y_new, filled_elements, line_width, x_size, y_size)
- * 
  */
-      __pyx_t_14 = __pyx_f_15line_generation_9generator_add_line(__pyx_v_x_pos, __pyx_v_y_pos, __pyx_v_x_start, __pyx_v_y_start, __pyx_v_vx, __pyx_v_vy, __pyx_v_line_width, __pyx_v_previously_filled_elements);
+      __pyx_t_14 = __pyx_f_15line_generation_9generator_add_line(__pyx_v_x_pos, __pyx_v_y_pos, __pyx_v_x_start, __pyx_v_y_start, __pyx_v_vx, __pyx_v_vy, __pyx_v_line_width, __pyx_v_previously_filled_elements, __pyx_v_min_line_separation);
       __pyx_t_15 = __pyx_t_14.f0;
       __pyx_t_6 = __pyx_t_14.f1;
       __pyx_v_x_new = __pyx_t_15;
       __pyx_v_y_new = __pyx_t_6;
 
-      /* "line_generation/generator.pyx":237
- * 
- *             x_new, y_new = add_line(x_pos, y_pos, x_start, y_start, vx, vy, line_width, previously_filled_elements)
+      /* "line_generation/generator.pyx":278
+ *             x_new, y_new = add_line(x_pos, y_pos, x_start, y_start, vx, vy, line_width, previously_filled_elements,
+ *                                     min_line_separation)
  *             fill_nearest_neighbours(x_new, y_new, filled_elements, line_width, x_size, y_size)             # <<<<<<<<<<<<<<
  * 
  *             if x_new != x_pos or y_new != y_pos:
  */
       (void)(__pyx_f_15line_generation_9generator_fill_nearest_neighbours(__pyx_v_x_new, __pyx_v_y_new, __pyx_v_filled_elements, __pyx_v_line_width, __pyx_v_x_size, __pyx_v_y_size));
 
-      /* "line_generation/generator.pyx":239
+      /* "line_generation/generator.pyx":280
  *             fill_nearest_neighbours(x_new, y_new, filled_elements, line_width, x_size, y_size)
  * 
  *             if x_new != x_pos or y_new != y_pos:             # <<<<<<<<<<<<<<
@@ -5026,7 +5482,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
       __pyx_L12_bool_binop_done:;
       if (__pyx_t_10) {
 
-        /* "line_generation/generator.pyx":240
+        /* "line_generation/generator.pyx":281
  * 
  *             if x_new != x_pos or y_new != y_pos:
  *                 x_pos = x_new             # <<<<<<<<<<<<<<
@@ -5035,7 +5491,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
         __pyx_v_x_pos = __pyx_v_x_new;
 
-        /* "line_generation/generator.pyx":241
+        /* "line_generation/generator.pyx":282
  *             if x_new != x_pos or y_new != y_pos:
  *                 x_pos = x_new
  *                 y_pos = y_new             # <<<<<<<<<<<<<<
@@ -5044,7 +5500,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
  */
         __pyx_v_y_pos = __pyx_v_y_new;
 
-        /* "line_generation/generator.pyx":239
+        /* "line_generation/generator.pyx":280
  *             fill_nearest_neighbours(x_new, y_new, filled_elements, line_width, x_size, y_size)
  * 
  *             if x_new != x_pos or y_new != y_pos:             # <<<<<<<<<<<<<<
@@ -5054,7 +5510,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
         goto __pyx_L11;
       }
 
-      /* "line_generation/generator.pyx":243
+      /* "line_generation/generator.pyx":284
  *                 y_pos = y_new
  *             else:
  *                 break             # <<<<<<<<<<<<<<
@@ -5068,7 +5524,7 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
     }
     __pyx_L9_break:;
 
-    /* "line_generation/generator.pyx":245
+    /* "line_generation/generator.pyx":286
  *                 break
  * 
  *         update_empty_elements(empty_elements, filled_elements)             # <<<<<<<<<<<<<<
@@ -5079,19 +5535,19 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
   }
   __pyx_L4_break:;
 
-  /* "line_generation/generator.pyx":249
+  /* "line_generation/generator.pyx":290
  *         # plt.imshow(previously_filled_elements)
  *         # plt.show()
  *     plt.imshow(filled_elements)             # <<<<<<<<<<<<<<
  *     plt.show()
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_plt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_plt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 290, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_imshow); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_imshow); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 290, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_filled_elements, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_filled_elements, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 290, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_16 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -5106,21 +5562,21 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
   __pyx_t_5 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_16, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 249, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 290, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "line_generation/generator.pyx":250
+  /* "line_generation/generator.pyx":291
  *         # plt.show()
  *     plt.imshow(filled_elements)
  *     plt.show()             # <<<<<<<<<<<<<<
  * 
- * 
+ *     return 0
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_plt); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 250, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_plt); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 291, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_show); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 250, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_show); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 291, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -5135,13 +5591,13 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
   }
   __pyx_t_5 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 250, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 291, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "line_generation/generator.pyx":253
- * 
+  /* "line_generation/generator.pyx":293
+ *     plt.show()
  * 
  *     return 0             # <<<<<<<<<<<<<<
  * 
@@ -5152,12 +5608,12 @@ static PyObject *__pyx_pf_15line_generation_9generator_generate_lines(CYTHON_UNU
   __pyx_r = __pyx_int_0;
   goto __pyx_L0;
 
-  /* "line_generation/generator.pyx":189
+  /* "line_generation/generator.pyx":225
  * 
  * 
  * def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2] y_field,             # <<<<<<<<<<<<<<
  *                    np.ndarray[int, ndim=2] desired_shape, np.ndarray[int, ndim=2] perimeter,
- *                    printer: Printer):
+ *                    printer: Printer, double min_line_separation, str sorting):
  */
 
   /* function exit code */
@@ -21236,6 +21692,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_u_consecutive, __pyx_k_consecutive, sizeof(__pyx_k_consecutive), 0, 1, 0, 1},
   {&__pyx_kp_s_contiguous_and_direct, __pyx_k_contiguous_and_direct, sizeof(__pyx_k_contiguous_and_direct), 0, 0, 1, 0},
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
   {&__pyx_n_s_cperimeter, __pyx_k_cperimeter, sizeof(__pyx_k_cperimeter), 0, 0, 1, 1},
@@ -21261,12 +21718,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_imshow, __pyx_k_imshow, sizeof(__pyx_k_imshow), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
+  {&__pyx_n_s_last_index, __pyx_k_last_index, sizeof(__pyx_k_last_index), 0, 0, 1, 1},
   {&__pyx_n_s_line_generation_generator, __pyx_k_line_generation_generator, sizeof(__pyx_k_line_generation_generator), 0, 0, 1, 1},
   {&__pyx_kp_s_line_generation_generator_pyx, __pyx_k_line_generation_generator_pyx, sizeof(__pyx_k_line_generation_generator_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_line_width, __pyx_k_line_width, sizeof(__pyx_k_line_width), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_matplotlib_pyplot, __pyx_k_matplotlib_pyplot, sizeof(__pyx_k_matplotlib_pyplot), 0, 0, 1, 1},
   {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
+  {&__pyx_n_s_min_line_separation, __pyx_k_min_line_separation, sizeof(__pyx_k_min_line_separation), 0, 0, 1, 1},
   {&__pyx_n_s_mode, __pyx_k_mode, sizeof(__pyx_k_mode), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_name_2, __pyx_k_name_2, sizeof(__pyx_k_name_2), 0, 0, 1, 1},
@@ -21281,6 +21740,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_numpy_core_multiarray_failed_to, __pyx_k_numpy_core_multiarray_failed_to, sizeof(__pyx_k_numpy_core_multiarray_failed_to), 0, 1, 0, 0},
   {&__pyx_kp_u_numpy_core_umath_failed_to_impor, __pyx_k_numpy_core_umath_failed_to_impor, sizeof(__pyx_k_numpy_core_umath_failed_to_impor), 0, 1, 0, 0},
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
+  {&__pyx_n_u_opposite, __pyx_k_opposite, sizeof(__pyx_k_opposite), 0, 1, 0, 1},
   {&__pyx_n_s_pack, __pyx_k_pack, sizeof(__pyx_k_pack), 0, 0, 1, 1},
   {&__pyx_n_s_perimeter, __pyx_k_perimeter, sizeof(__pyx_k_perimeter), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
@@ -21304,6 +21764,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
   {&__pyx_n_s_show, __pyx_k_show, sizeof(__pyx_k_show), 0, 0, 1, 1},
   {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
+  {&__pyx_n_s_sorting, __pyx_k_sorting, sizeof(__pyx_k_sorting), 0, 0, 1, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
   {&__pyx_n_s_step, __pyx_k_step, sizeof(__pyx_k_step), 0, 0, 1, 1},
   {&__pyx_n_s_stop, __pyx_k_stop, sizeof(__pyx_k_stop), 0, 0, 1, 1},
@@ -21334,7 +21795,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 48, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 272, __pyx_L1_error)
   __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(1, 856, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 1038, __pyx_L1_error)
@@ -21622,17 +22083,17 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
 
-  /* "line_generation/generator.pyx":189
+  /* "line_generation/generator.pyx":225
  * 
  * 
  * def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2] y_field,             # <<<<<<<<<<<<<<
  *                    np.ndarray[int, ndim=2] desired_shape, np.ndarray[int, ndim=2] perimeter,
- *                    printer: Printer):
+ *                    printer: Printer, double min_line_separation, str sorting):
  */
-  __pyx_tuple__27 = PyTuple_Pack(22, __pyx_n_s_x_field, __pyx_n_s_y_field, __pyx_n_s_desired_shape, __pyx_n_s_perimeter, __pyx_n_s_printer, __pyx_n_s_cperimeter, __pyx_n_s_cx_field, __pyx_n_s_cy_field, __pyx_n_s_empty_elements, __pyx_n_s_filled_elements, __pyx_n_s_previously_filled_elements, __pyx_n_s_line_width, __pyx_n_s_x_size, __pyx_n_s_y_size, __pyx_n_s_x_start, __pyx_n_s_y_start, __pyx_n_s_x_pos, __pyx_n_s_y_pos, __pyx_n_s_x_new, __pyx_n_s_y_new, __pyx_n_s_vx, __pyx_n_s_vy); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_tuple__27 = PyTuple_Pack(25, __pyx_n_s_x_field, __pyx_n_s_y_field, __pyx_n_s_desired_shape, __pyx_n_s_perimeter, __pyx_n_s_printer, __pyx_n_s_min_line_separation, __pyx_n_s_sorting, __pyx_n_s_cperimeter, __pyx_n_s_cx_field, __pyx_n_s_cy_field, __pyx_n_s_empty_elements, __pyx_n_s_filled_elements, __pyx_n_s_previously_filled_elements, __pyx_n_s_line_width, __pyx_n_s_x_size, __pyx_n_s_y_size, __pyx_n_s_x_start, __pyx_n_s_y_start, __pyx_n_s_x_pos, __pyx_n_s_y_pos, __pyx_n_s_x_new, __pyx_n_s_y_new, __pyx_n_s_vx, __pyx_n_s_vy, __pyx_n_s_last_index); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(5, 0, 22, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_line_generation_generator_pyx, __pyx_n_s_generate_lines, 189, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(7, 0, 25, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_line_generation_generator_pyx, __pyx_n_s_generate_lines, 225, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 225, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -21962,7 +22423,8 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_generator(PyObject *__pyx_pyinit_m
 {
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
-  static PyThread_type_lock __pyx_t_3[8];
+  static int __pyx_t_3[7];
+  static PyThread_type_lock __pyx_t_4[8];
   __Pyx_RefNannyDeclarations
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
@@ -22081,7 +22543,7 @@ if (!__Pyx_RefNanny) {
 
   /* "line_generation/generator.pyx":7
  * cimport cython
- * from libc.math cimport floor, ceil, round, sqrt
+ * from libc.math cimport floor, ceil, round, sqrt, log
  * from printer import Printer             # <<<<<<<<<<<<<<
  * import matplotlib.pyplot as plt
  * 
@@ -22101,7 +22563,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "line_generation/generator.pyx":8
- * from libc.math cimport floor, ceil, round, sqrt
+ * from libc.math cimport floor, ceil, round, sqrt, log
  * from printer import Printer
  * import matplotlib.pyplot as plt             # <<<<<<<<<<<<<<
  * 
@@ -22118,17 +22580,17 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_plt, __pyx_t_1) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "line_generation/generator.pyx":13
- * 
- * 
+  /* "line_generation/generator.pyx":14
+ * #TODO make the algorithm work irregardless of the starting angle
+ * #TODO fix random empty lines in between lines
  * cdef int MIN_SEGMENT_NUMBER = 5             # <<<<<<<<<<<<<<
  * cdef double ANGLE_THRESHOLD = 0.02
  * cdef double MIN_DISTANCE_COEFFICIENT = 0.5
  */
   __pyx_v_15line_generation_9generator_MIN_SEGMENT_NUMBER = 5;
 
-  /* "line_generation/generator.pyx":14
- * 
+  /* "line_generation/generator.pyx":15
+ * #TODO fix random empty lines in between lines
  * cdef int MIN_SEGMENT_NUMBER = 5
  * cdef double ANGLE_THRESHOLD = 0.02             # <<<<<<<<<<<<<<
  * cdef double MIN_DISTANCE_COEFFICIENT = 0.5
@@ -22136,52 +22598,68 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_v_15line_generation_9generator_ANGLE_THRESHOLD = 0.02;
 
-  /* "line_generation/generator.pyx":15
+  /* "line_generation/generator.pyx":16
  * cdef int MIN_SEGMENT_NUMBER = 5
  * cdef double ANGLE_THRESHOLD = 0.02
  * cdef double MIN_DISTANCE_COEFFICIENT = 0.5             # <<<<<<<<<<<<<<
  * cdef double NEW_LINE_SEPARATION = 1
- * cdef double MIN_LINE_SEPARATION = 0.9
+ * cdef int NEIGHBOUR_THRESHOLD = 1
  */
   __pyx_v_15line_generation_9generator_MIN_DISTANCE_COEFFICIENT = 0.5;
 
-  /* "line_generation/generator.pyx":16
+  /* "line_generation/generator.pyx":17
  * cdef double ANGLE_THRESHOLD = 0.02
  * cdef double MIN_DISTANCE_COEFFICIENT = 0.5
  * cdef double NEW_LINE_SEPARATION = 1             # <<<<<<<<<<<<<<
- * cdef double MIN_LINE_SEPARATION = 0.9
  * cdef int NEIGHBOUR_THRESHOLD = 1
+ * 
  */
   __pyx_v_15line_generation_9generator_NEW_LINE_SEPARATION = 1.0;
 
-  /* "line_generation/generator.pyx":17
+  /* "line_generation/generator.pyx":18
  * cdef double MIN_DISTANCE_COEFFICIENT = 0.5
  * cdef double NEW_LINE_SEPARATION = 1
- * cdef double MIN_LINE_SEPARATION = 0.9             # <<<<<<<<<<<<<<
- * cdef int NEIGHBOUR_THRESHOLD = 1
- * 
- */
-  __pyx_v_15line_generation_9generator_MIN_LINE_SEPARATION = 0.9;
-
-  /* "line_generation/generator.pyx":18
- * cdef double NEW_LINE_SEPARATION = 1
- * cdef double MIN_LINE_SEPARATION = 0.9
  * cdef int NEIGHBOUR_THRESHOLD = 1             # <<<<<<<<<<<<<<
  * 
- * cdef double norm(double a, double b) nogil:
+ * cdef int LOG_BASES[7]
  */
   __pyx_v_15line_generation_9generator_NEIGHBOUR_THRESHOLD = 1;
 
-  /* "line_generation/generator.pyx":189
+  /* "line_generation/generator.pyx":21
+ * 
+ * cdef int LOG_BASES[7]
+ * LOG_BASES[:] = [2, 3, 5, 7, 11, 13, 17]             # <<<<<<<<<<<<<<
+ * cdef int LOG_BASES_SIZE = 7
+ * #TODO make automatic prime number generator for slicing
+ */
+  __pyx_t_3[0] = 2;
+  __pyx_t_3[1] = 3;
+  __pyx_t_3[2] = 5;
+  __pyx_t_3[3] = 7;
+  __pyx_t_3[4] = 11;
+  __pyx_t_3[5] = 13;
+  __pyx_t_3[6] = 17;
+  memcpy(&(__pyx_v_15line_generation_9generator_LOG_BASES[0]), __pyx_t_3, sizeof(__pyx_v_15line_generation_9generator_LOG_BASES[0]) * (7));
+
+  /* "line_generation/generator.pyx":22
+ * cdef int LOG_BASES[7]
+ * LOG_BASES[:] = [2, 3, 5, 7, 11, 13, 17]
+ * cdef int LOG_BASES_SIZE = 7             # <<<<<<<<<<<<<<
+ * #TODO make automatic prime number generator for slicing
+ * 
+ */
+  __pyx_v_15line_generation_9generator_LOG_BASES_SIZE = 7;
+
+  /* "line_generation/generator.pyx":225
  * 
  * 
  * def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2] y_field,             # <<<<<<<<<<<<<<
  *                    np.ndarray[int, ndim=2] desired_shape, np.ndarray[int, ndim=2] perimeter,
- *                    printer: Printer):
+ *                    printer: Printer, double min_line_separation, str sorting):
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15line_generation_9generator_1generate_lines, NULL, __pyx_n_s_line_generation_generator); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15line_generation_9generator_1generate_lines, NULL, __pyx_n_s_line_generation_generator); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_generate_lines, __pyx_t_1) < 0) __PYX_ERR(0, 189, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_generate_lines, __pyx_t_1) < 0) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "line_generation/generator.pyx":1
@@ -22293,15 +22771,15 @@ if (!__Pyx_RefNanny) {
  *     PyThread_allocate_lock(),
  *     PyThread_allocate_lock(),
  */
-  __pyx_t_3[0] = PyThread_allocate_lock();
-  __pyx_t_3[1] = PyThread_allocate_lock();
-  __pyx_t_3[2] = PyThread_allocate_lock();
-  __pyx_t_3[3] = PyThread_allocate_lock();
-  __pyx_t_3[4] = PyThread_allocate_lock();
-  __pyx_t_3[5] = PyThread_allocate_lock();
-  __pyx_t_3[6] = PyThread_allocate_lock();
-  __pyx_t_3[7] = PyThread_allocate_lock();
-  memcpy(&(__pyx_memoryview_thread_locks[0]), __pyx_t_3, sizeof(__pyx_memoryview_thread_locks[0]) * (8));
+  __pyx_t_4[0] = PyThread_allocate_lock();
+  __pyx_t_4[1] = PyThread_allocate_lock();
+  __pyx_t_4[2] = PyThread_allocate_lock();
+  __pyx_t_4[3] = PyThread_allocate_lock();
+  __pyx_t_4[4] = PyThread_allocate_lock();
+  __pyx_t_4[5] = PyThread_allocate_lock();
+  __pyx_t_4[6] = PyThread_allocate_lock();
+  __pyx_t_4[7] = PyThread_allocate_lock();
+  memcpy(&(__pyx_memoryview_thread_locks[0]), __pyx_t_4, sizeof(__pyx_memoryview_thread_locks[0]) * (8));
 
   /* "View.MemoryView":549
  *         info.obj = self
@@ -22416,6 +22894,221 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
 #endif
     }
     return result;
+}
+
+/* BytesEquals */
+static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals) {
+#if CYTHON_COMPILING_IN_PYPY
+    return PyObject_RichCompareBool(s1, s2, equals);
+#else
+    if (s1 == s2) {
+        return (equals == Py_EQ);
+    } else if (PyBytes_CheckExact(s1) & PyBytes_CheckExact(s2)) {
+        const char *ps1, *ps2;
+        Py_ssize_t length = PyBytes_GET_SIZE(s1);
+        if (length != PyBytes_GET_SIZE(s2))
+            return (equals == Py_NE);
+        ps1 = PyBytes_AS_STRING(s1);
+        ps2 = PyBytes_AS_STRING(s2);
+        if (ps1[0] != ps2[0]) {
+            return (equals == Py_NE);
+        } else if (length == 1) {
+            return (equals == Py_EQ);
+        } else {
+            int result;
+#if CYTHON_USE_UNICODE_INTERNALS
+            Py_hash_t hash1, hash2;
+            hash1 = ((PyBytesObject*)s1)->ob_shash;
+            hash2 = ((PyBytesObject*)s2)->ob_shash;
+            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
+                return (equals == Py_NE);
+            }
+#endif
+            result = memcmp(ps1, ps2, (size_t)length);
+            return (equals == Py_EQ) ? (result == 0) : (result != 0);
+        }
+    } else if ((s1 == Py_None) & PyBytes_CheckExact(s2)) {
+        return (equals == Py_NE);
+    } else if ((s2 == Py_None) & PyBytes_CheckExact(s1)) {
+        return (equals == Py_NE);
+    } else {
+        int result;
+        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
+        if (!py_result)
+            return -1;
+        result = __Pyx_PyObject_IsTrue(py_result);
+        Py_DECREF(py_result);
+        return result;
+    }
+#endif
+}
+
+/* UnicodeEquals */
+static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals) {
+#if CYTHON_COMPILING_IN_PYPY
+    return PyObject_RichCompareBool(s1, s2, equals);
+#else
+#if PY_MAJOR_VERSION < 3
+    PyObject* owned_ref = NULL;
+#endif
+    int s1_is_unicode, s2_is_unicode;
+    if (s1 == s2) {
+        goto return_eq;
+    }
+    s1_is_unicode = PyUnicode_CheckExact(s1);
+    s2_is_unicode = PyUnicode_CheckExact(s2);
+#if PY_MAJOR_VERSION < 3
+    if ((s1_is_unicode & (!s2_is_unicode)) && PyString_CheckExact(s2)) {
+        owned_ref = PyUnicode_FromObject(s2);
+        if (unlikely(!owned_ref))
+            return -1;
+        s2 = owned_ref;
+        s2_is_unicode = 1;
+    } else if ((s2_is_unicode & (!s1_is_unicode)) && PyString_CheckExact(s1)) {
+        owned_ref = PyUnicode_FromObject(s1);
+        if (unlikely(!owned_ref))
+            return -1;
+        s1 = owned_ref;
+        s1_is_unicode = 1;
+    } else if (((!s2_is_unicode) & (!s1_is_unicode))) {
+        return __Pyx_PyBytes_Equals(s1, s2, equals);
+    }
+#endif
+    if (s1_is_unicode & s2_is_unicode) {
+        Py_ssize_t length;
+        int kind;
+        void *data1, *data2;
+        if (unlikely(__Pyx_PyUnicode_READY(s1) < 0) || unlikely(__Pyx_PyUnicode_READY(s2) < 0))
+            return -1;
+        length = __Pyx_PyUnicode_GET_LENGTH(s1);
+        if (length != __Pyx_PyUnicode_GET_LENGTH(s2)) {
+            goto return_ne;
+        }
+#if CYTHON_USE_UNICODE_INTERNALS
+        {
+            Py_hash_t hash1, hash2;
+        #if CYTHON_PEP393_ENABLED
+            hash1 = ((PyASCIIObject*)s1)->hash;
+            hash2 = ((PyASCIIObject*)s2)->hash;
+        #else
+            hash1 = ((PyUnicodeObject*)s1)->hash;
+            hash2 = ((PyUnicodeObject*)s2)->hash;
+        #endif
+            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
+                goto return_ne;
+            }
+        }
+#endif
+        kind = __Pyx_PyUnicode_KIND(s1);
+        if (kind != __Pyx_PyUnicode_KIND(s2)) {
+            goto return_ne;
+        }
+        data1 = __Pyx_PyUnicode_DATA(s1);
+        data2 = __Pyx_PyUnicode_DATA(s2);
+        if (__Pyx_PyUnicode_READ(kind, data1, 0) != __Pyx_PyUnicode_READ(kind, data2, 0)) {
+            goto return_ne;
+        } else if (length == 1) {
+            goto return_eq;
+        } else {
+            int result = memcmp(data1, data2, (size_t)(length * kind));
+            #if PY_MAJOR_VERSION < 3
+            Py_XDECREF(owned_ref);
+            #endif
+            return (equals == Py_EQ) ? (result == 0) : (result != 0);
+        }
+    } else if ((s1 == Py_None) & s2_is_unicode) {
+        goto return_ne;
+    } else if ((s2 == Py_None) & s1_is_unicode) {
+        goto return_ne;
+    } else {
+        int result;
+        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
+        #if PY_MAJOR_VERSION < 3
+        Py_XDECREF(owned_ref);
+        #endif
+        if (!py_result)
+            return -1;
+        result = __Pyx_PyObject_IsTrue(py_result);
+        Py_DECREF(py_result);
+        return result;
+    }
+return_eq:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(owned_ref);
+    #endif
+    return (equals == Py_EQ);
+return_ne:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(owned_ref);
+    #endif
+    return (equals == Py_NE);
+#endif
+}
+
+/* PyErrFetchRestore */
+#if CYTHON_FAST_THREAD_STATE
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    tmp_type = tstate->curexc_type;
+    tmp_value = tstate->curexc_value;
+    tmp_tb = tstate->curexc_traceback;
+    tstate->curexc_type = type;
+    tstate->curexc_value = value;
+    tstate->curexc_traceback = tb;
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
+}
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
+    *type = tstate->curexc_type;
+    *value = tstate->curexc_value;
+    *tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+}
+#endif
+
+/* WriteUnraisableException */
+static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
+                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
+                                  int full_traceback, CYTHON_UNUSED int nogil) {
+    PyObject *old_exc, *old_val, *old_tb;
+    PyObject *ctx;
+    __Pyx_PyThreadState_declare
+#ifdef WITH_THREAD
+    PyGILState_STATE state;
+    if (nogil)
+        state = PyGILState_Ensure();
+#ifdef _MSC_VER
+    else state = (PyGILState_STATE)-1;
+#endif
+#endif
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
+    if (full_traceback) {
+        Py_XINCREF(old_exc);
+        Py_XINCREF(old_val);
+        Py_XINCREF(old_tb);
+        __Pyx_ErrRestore(old_exc, old_val, old_tb);
+        PyErr_PrintEx(1);
+    }
+    #if PY_MAJOR_VERSION < 3
+    ctx = PyString_FromString(name);
+    #else
+    ctx = PyUnicode_FromString(name);
+    #endif
+    __Pyx_ErrRestore(old_exc, old_val, old_tb);
+    if (!ctx) {
+        PyErr_WriteUnraisable(Py_None);
+    } else {
+        PyErr_WriteUnraisable(ctx);
+        Py_DECREF(ctx);
+    }
+#ifdef WITH_THREAD
+    if (nogil)
+        PyGILState_Release(state);
+#endif
 }
 
 /* RaiseArgTupleInvalid */
@@ -23610,30 +24303,6 @@ static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *memslice,
     }
 }
 
-/* PyErrFetchRestore */
-  #if CYTHON_FAST_THREAD_STATE
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
-    PyObject *tmp_type, *tmp_value, *tmp_tb;
-    tmp_type = tstate->curexc_type;
-    tmp_value = tstate->curexc_value;
-    tmp_tb = tstate->curexc_traceback;
-    tstate->curexc_type = type;
-    tstate->curexc_value = value;
-    tstate->curexc_traceback = tb;
-    Py_XDECREF(tmp_type);
-    Py_XDECREF(tmp_value);
-    Py_XDECREF(tmp_tb);
-}
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
-    *type = tstate->curexc_type;
-    *value = tstate->curexc_value;
-    *tb = tstate->curexc_traceback;
-    tstate->curexc_type = 0;
-    tstate->curexc_value = 0;
-    tstate->curexc_traceback = 0;
-}
-#endif
-
 /* RaiseException */
   #if PY_MAJOR_VERSION < 3
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb,
@@ -24001,155 +24670,6 @@ bad:
     Py_XDECREF(local_value);
     Py_XDECREF(local_tb);
     return -1;
-}
-
-/* BytesEquals */
-  static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals) {
-#if CYTHON_COMPILING_IN_PYPY
-    return PyObject_RichCompareBool(s1, s2, equals);
-#else
-    if (s1 == s2) {
-        return (equals == Py_EQ);
-    } else if (PyBytes_CheckExact(s1) & PyBytes_CheckExact(s2)) {
-        const char *ps1, *ps2;
-        Py_ssize_t length = PyBytes_GET_SIZE(s1);
-        if (length != PyBytes_GET_SIZE(s2))
-            return (equals == Py_NE);
-        ps1 = PyBytes_AS_STRING(s1);
-        ps2 = PyBytes_AS_STRING(s2);
-        if (ps1[0] != ps2[0]) {
-            return (equals == Py_NE);
-        } else if (length == 1) {
-            return (equals == Py_EQ);
-        } else {
-            int result;
-#if CYTHON_USE_UNICODE_INTERNALS
-            Py_hash_t hash1, hash2;
-            hash1 = ((PyBytesObject*)s1)->ob_shash;
-            hash2 = ((PyBytesObject*)s2)->ob_shash;
-            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
-                return (equals == Py_NE);
-            }
-#endif
-            result = memcmp(ps1, ps2, (size_t)length);
-            return (equals == Py_EQ) ? (result == 0) : (result != 0);
-        }
-    } else if ((s1 == Py_None) & PyBytes_CheckExact(s2)) {
-        return (equals == Py_NE);
-    } else if ((s2 == Py_None) & PyBytes_CheckExact(s1)) {
-        return (equals == Py_NE);
-    } else {
-        int result;
-        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
-        if (!py_result)
-            return -1;
-        result = __Pyx_PyObject_IsTrue(py_result);
-        Py_DECREF(py_result);
-        return result;
-    }
-#endif
-}
-
-/* UnicodeEquals */
-  static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals) {
-#if CYTHON_COMPILING_IN_PYPY
-    return PyObject_RichCompareBool(s1, s2, equals);
-#else
-#if PY_MAJOR_VERSION < 3
-    PyObject* owned_ref = NULL;
-#endif
-    int s1_is_unicode, s2_is_unicode;
-    if (s1 == s2) {
-        goto return_eq;
-    }
-    s1_is_unicode = PyUnicode_CheckExact(s1);
-    s2_is_unicode = PyUnicode_CheckExact(s2);
-#if PY_MAJOR_VERSION < 3
-    if ((s1_is_unicode & (!s2_is_unicode)) && PyString_CheckExact(s2)) {
-        owned_ref = PyUnicode_FromObject(s2);
-        if (unlikely(!owned_ref))
-            return -1;
-        s2 = owned_ref;
-        s2_is_unicode = 1;
-    } else if ((s2_is_unicode & (!s1_is_unicode)) && PyString_CheckExact(s1)) {
-        owned_ref = PyUnicode_FromObject(s1);
-        if (unlikely(!owned_ref))
-            return -1;
-        s1 = owned_ref;
-        s1_is_unicode = 1;
-    } else if (((!s2_is_unicode) & (!s1_is_unicode))) {
-        return __Pyx_PyBytes_Equals(s1, s2, equals);
-    }
-#endif
-    if (s1_is_unicode & s2_is_unicode) {
-        Py_ssize_t length;
-        int kind;
-        void *data1, *data2;
-        if (unlikely(__Pyx_PyUnicode_READY(s1) < 0) || unlikely(__Pyx_PyUnicode_READY(s2) < 0))
-            return -1;
-        length = __Pyx_PyUnicode_GET_LENGTH(s1);
-        if (length != __Pyx_PyUnicode_GET_LENGTH(s2)) {
-            goto return_ne;
-        }
-#if CYTHON_USE_UNICODE_INTERNALS
-        {
-            Py_hash_t hash1, hash2;
-        #if CYTHON_PEP393_ENABLED
-            hash1 = ((PyASCIIObject*)s1)->hash;
-            hash2 = ((PyASCIIObject*)s2)->hash;
-        #else
-            hash1 = ((PyUnicodeObject*)s1)->hash;
-            hash2 = ((PyUnicodeObject*)s2)->hash;
-        #endif
-            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
-                goto return_ne;
-            }
-        }
-#endif
-        kind = __Pyx_PyUnicode_KIND(s1);
-        if (kind != __Pyx_PyUnicode_KIND(s2)) {
-            goto return_ne;
-        }
-        data1 = __Pyx_PyUnicode_DATA(s1);
-        data2 = __Pyx_PyUnicode_DATA(s2);
-        if (__Pyx_PyUnicode_READ(kind, data1, 0) != __Pyx_PyUnicode_READ(kind, data2, 0)) {
-            goto return_ne;
-        } else if (length == 1) {
-            goto return_eq;
-        } else {
-            int result = memcmp(data1, data2, (size_t)(length * kind));
-            #if PY_MAJOR_VERSION < 3
-            Py_XDECREF(owned_ref);
-            #endif
-            return (equals == Py_EQ) ? (result == 0) : (result != 0);
-        }
-    } else if ((s1 == Py_None) & s2_is_unicode) {
-        goto return_ne;
-    } else if ((s2 == Py_None) & s1_is_unicode) {
-        goto return_ne;
-    } else {
-        int result;
-        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
-        #if PY_MAJOR_VERSION < 3
-        Py_XDECREF(owned_ref);
-        #endif
-        if (!py_result)
-            return -1;
-        result = __Pyx_PyObject_IsTrue(py_result);
-        Py_DECREF(py_result);
-        return result;
-    }
-return_eq:
-    #if PY_MAJOR_VERSION < 3
-    Py_XDECREF(owned_ref);
-    #endif
-    return (equals == Py_EQ);
-return_ne:
-    #if PY_MAJOR_VERSION < 3
-    Py_XDECREF(owned_ref);
-    #endif
-    return (equals == Py_NE);
-#endif
 }
 
 /* GetAttr */
@@ -25253,6 +25773,33 @@ __pyx_capsule_create(void *p, CYTHON_UNUSED const char *sig)
 /* None */
   static CYTHON_INLINE long __Pyx_pow_long(long b, long e) {
     long t = b;
+    switch (e) {
+        case 3:
+            t *= b;
+        CYTHON_FALLTHROUGH;
+        case 2:
+            t *= b;
+        CYTHON_FALLTHROUGH;
+        case 1:
+            return t;
+        case 0:
+            return 1;
+    }
+    #if 1
+    if (unlikely(e<0)) return 0;
+    #endif
+    t = 1;
+    while (likely(e)) {
+        t *= (b * (e&1)) | ((~e)&1);
+        b *= b;
+        e >>= 1;
+    }
+    return t;
+}
+
+/* None */
+  static CYTHON_INLINE int __Pyx_pow_int(int b, int e) {
+    int t = b;
     switch (e) {
         case 3:
             t *= b;

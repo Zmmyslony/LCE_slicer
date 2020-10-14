@@ -3,7 +3,7 @@ from __future__ import print_function
 import numpy as np
 cimport numpy as np
 cimport cython
-from libc.math cimport floor, ceil, round, sqrt
+from libc.math cimport floor, ceil, round, sqrt, log
 from printer import Printer
 import matplotlib.pyplot as plt
 
@@ -16,6 +16,11 @@ cdef double ANGLE_THRESHOLD = 0.02
 cdef double MIN_DISTANCE_COEFFICIENT = 0.5
 cdef double NEW_LINE_SEPARATION = 1
 cdef int NEIGHBOUR_THRESHOLD = 1
+
+cdef int LOG_BASES_SIZE = 7
+cdef int LOG_BASES[7]
+LOG_BASES[:] = [2, 3, 5, 7, 11, 13, 17]
+
 
 cdef double norm(double a, double b):
     cdef double result = sqrt(a ** 2 + b ** 2)
@@ -67,26 +72,60 @@ cdef int make_binary(int[:, :] matrix, int low=0, int high=1, double threshold=0
                 matrix[i, j] = low
     return 0
 
-    
-cdef (int, int) find_next_perimeter(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,
-                                    double[:, :] x_field, double[:, :] y_field, double line_width):
-    cdef int i = 0
-    cdef double distance_from_filled = 0
-    cdef double vx = x_field[perimeter[0, 0], perimeter[0, 1]]
-    cdef double vy = y_field[perimeter[0, 0], perimeter[0, 1]]
-    cdef int x_filled = 0
-    cdef int y_filled = 0
 
-    for i in range(perimeter.shape[0]):
-        if empty_elements[perimeter[i, 0], perimeter[i, 1]]:
-            if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[i, 0], perimeter[i, 1]):
-                return perimeter[i, 0], perimeter[i, 1]
-        else:
-            vx = x_field[perimeter[i, 0], perimeter[i, 1]]
-            vy = y_field[perimeter[i, 0], perimeter[i, 1]]
-            vx, vy = normalize(vx, vy)
-            x_filled, y_filled = perimeter[i, 0], perimeter[i, 1]
-            distance_from_filled = 0
+cdef double decimal_part(double val):
+    return val - <int>val
+
+
+cdef int index_generator(int i, int size):
+    cdef int base = 0
+    cdef int exponent = 0
+    cdef double closeness = 1
+    cdef int j = 0
+    cdef int current_base = 0
+    size -= 1
+
+    #TODO optimize the python out of here
+    for j in range(LOG_BASES_SIZE): #[2, 3, 5, 7, 11, 13, 17]:
+        current_base = LOG_BASES[j]
+        if decimal_part(log(size) / log(current_base)) < closeness:
+            closeness = decimal_part(log(size) / log(current_base))
+            base = current_base
+    base = 2
+    if i <= base:
+        return <int>(size / base * i)
+    else:
+        exponent = <int>(log(i) / log(base))
+        return <int>(size / base ** (exponent) * (i - base ** (exponent)) + size / base ** (exponent))
+
+
+cdef (int, int) find_next_perimeter(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,
+                                    double[:, :] x_field, double[:, :] y_field, double line_width, int* last_index,
+                                    str sorting):
+    cdef int i = 0
+    cdef int j = 0
+
+    if sorting == "opposite":
+        i = index_generator(last_index[0], perimeter.shape[0])
+        last_index[0] += 1
+
+        for j in range(i, perimeter.shape[0]):
+            if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+                if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+                    return perimeter[j, 0], perimeter[j, 1]
+        for j in range(i, 0, -1):
+            if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+                if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+                    return perimeter[j, 0], perimeter[j, 1]
+        for j in range(0, perimeter.shape[0]):
+            if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+                if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+                    return perimeter[j, 0], perimeter[j, 1]
+    if sorting == "consecutive":
+        for j in range(0, perimeter.shape[0]):
+            if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+                if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+                    return perimeter[j, 0], perimeter[j, 1]
     return 0, 0
 
 
@@ -185,7 +224,7 @@ cdef int update_empty_elements(int[:, :] empty_elements, int[:, :] filled_elemen
 
 def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2] y_field,
                    np.ndarray[int, ndim=2] desired_shape, np.ndarray[int, ndim=2] perimeter,
-                   printer: Printer, double min_line_separation):
+                   printer: Printer, double min_line_separation, str sorting):
     cdef int[:, :] cperimeter = perimeter
 
     cdef double[:, :] cx_field = x_field
@@ -211,8 +250,11 @@ def generate_lines(np.ndarray[double, ndim=2] x_field, np.ndarray[double, ndim=2
     cdef double vx = 0
     cdef double vy = 0
 
+    cdef int last_index = 0
+
     while True:
-        x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field, line_width)
+        x_start, y_start = find_next_perimeter(cperimeter, empty_elements, filled_elements, cx_field, cy_field,
+                                               line_width, &last_index, sorting)
         if x_start == 0 and y_start == 0:
             break
         x_pos = x_start
