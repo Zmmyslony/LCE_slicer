@@ -17,7 +17,7 @@ def find_perimeter(shape_mat):
     perimeter_unsorted_angle = np.arctan2(perimeter_unsorted_pos[0], perimeter_unsorted_pos[1])
 
     sorted_perimeter = perimeter_unsorted_pos[:, np.argsort(perimeter_unsorted_angle)].transpose() + \
-                       np.reshape(np.array(shape_mat.shape), (1, 2)) / 2
+        np.reshape(np.array(shape_mat.shape), (1, 2)) / 2
     return sorted_perimeter
 
 

@@ -2,12 +2,10 @@
 from __future__ import print_function
 import numpy as np
 cimport numpy as np
-cimport cython
 from libc.math cimport floor, ceil, round, sqrt, log
 from printer import Printer
 import matplotlib.pyplot as plt
 
-# cimport line_generation.auxiliary as aux
 
 #TODO make the algorithm work irregardless of the starting angle
 #TODO fix random empty lines in between lines
@@ -20,6 +18,21 @@ cdef int NEIGHBOUR_THRESHOLD = 1
 cdef int LOG_BASES_SIZE = 7
 cdef int LOG_BASES[7]
 LOG_BASES[:] = [2, 3, 5, 7, 11, 13, 17]
+
+cdef class Slicer:
+    cdef int min_segment_number
+    cdef int neighbour_threshold
+    cdef double angle_threshold
+    cdef double min_distance_coefficient
+    cdef double new_line_separation
+
+    def __init__(self, int min_segment_number=5, int neighbour_threshold=1, double angle_threshold=0.02,
+             double min_distance_coefficient=0.5, double new_line_separation=1):
+        self.min_segment_number = min_segment_number
+        self.neighbour_threshold = neighbour_threshold
+        self.angle_threshold = angle_threshold
+        self.min_distance_coefficient = min_distance_coefficient
+        self.new_line_separation = new_line_separation
 
 
 cdef double norm(double a, double b):
@@ -96,37 +109,45 @@ cdef int index_generator(int i, int size):
         return <int>(size / base * i)
     else:
         exponent = <int>(log(i) / log(base))
-        return <int>(size / base ** (exponent) * (i - base ** (exponent)) + size / base ** (exponent))
+        return <int>(size / base ** exponent * (i - base ** exponent) + size / base ** exponent)
+
+
+cdef (bint, int, int) find_empty_spot(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,
+                                           double line_width, int starting_index, int ending_index, int step=1):
+    cdef int i = 0
+    cdef int j = 0
+    cdef int rng = <int>(abs(starting_index - ending_index) / step)
+    for i in range(rng):
+        j = starting_index + step * i
+        if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
+            if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
+                return True, perimeter[j, 0], perimeter[j, 1]
+
+    return False, 0, 0
 
 
 cdef (int, int) find_next_perimeter(int[:, :] perimeter, int[:, :] empty_elements, int[:, :] filled_elements,
                                     double[:, :] x_field, double[:, :] y_field, double line_width, int* last_index,
                                     str sorting):
     cdef int i = 0
-    cdef int j = 0
+    cdef int x = 0
+    cdef int y = 0
+    cdef bint found_spot = False
 
     if sorting == "opposite":
         i = index_generator(last_index[0], perimeter.shape[0])
         last_index[0] += 1
 
-        for j in range(i, perimeter.shape[0]):
-            if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
-                if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
-                    return perimeter[j, 0], perimeter[j, 1]
-        for j in range(i, 0, -1):
-            if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
-                if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
-                    return perimeter[j, 0], perimeter[j, 1]
-        for j in range(0, perimeter.shape[0]):
-            if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
-                if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
-                    return perimeter[j, 0], perimeter[j, 1]
-    if sorting == "consecutive":
-        for j in range(0, perimeter.shape[0]):
-            if empty_elements[perimeter[j, 0], perimeter[j, 1]]:
-                if check_proximity(filled_elements, line_width * NEW_LINE_SEPARATION, perimeter[j, 0], perimeter[j, 1]):
-                    return perimeter[j, 0], perimeter[j, 1]
-    return 0, 0
+        found_spot, x, y = find_empty_spot(perimeter, empty_elements, filled_elements, line_width, i, perimeter.shape[0])
+        if not found_spot:
+            found_spot, x, y = find_empty_spot(perimeter, empty_elements, filled_elements, line_width, i, 0, step=-1)
+        elif not found_spot:
+            found_spot, x, y = find_empty_spot(perimeter, empty_elements, filled_elements, line_width, 0,
+                                               perimeter.shape[0])
+    elif sorting == "consecutive":
+        found_spot, x, y = find_empty_spot(perimeter, empty_elements, filled_elements, line_width, 0,
+                                               perimeter.shape[0])
+    return x, y
 
 
 cdef double bilinear_interpolation(double[:, :] field, double x, double y):
