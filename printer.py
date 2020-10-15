@@ -2,14 +2,14 @@ class Nozzle:
     def __init__(self, speed, fast_speed, line_width, layer_height, extrusion, temperature):
         self.speed = speed
         self.fast_speed = fast_speed
-        self.line_width = line_width
+        self.line_width = line_width / 2
         self.layer_height = layer_height
         self.extrusion = extrusion
         self.temperature = temperature
 
 
 class Printer:
-    def __init__(self, nozzle, accuracy=0.04):
+    def __init__(self, nozzle, accuracy=0.01):
         self.accuracy = accuracy
         self.nozzle = nozzle
 

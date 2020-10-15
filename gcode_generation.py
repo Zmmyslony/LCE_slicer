@@ -30,40 +30,40 @@ class GcodeBody:
         self.save_file(self.filename)
 
     def write_command(self, command):
-        self.file.write(command)
+        self.file.write(command + "\n")
 
     def set_nozzle_temperature(self, temp):
-        self.write_command("M104 \tS{}\n".format(temp))
+        self.write_command("M104 \tS{}".format(temp))
 
     def wait_until_nozzle_reaches(self, temp):
-        self.write_command("M109 \tS{}\n".format(temp))
+        self.write_command("M109 \tS{}".format(temp))
 
     def set_bed_temperature(self, temp):
-        self.write_command("M140 \tS{}\n".format(temp))
+        self.write_command("M140 \tS{}".format(temp))
 
     def wait_until_bed_reaches(self, temp):
-        self.write_command("M190 \tS{}\n".format(temp))
+        self.write_command("M190 \tS{}".format(temp))
 
     def set_relative_positioning(self):
-        self.write_command("G91 \n")
+        self.write_command("G91")
         self.moving_mode = 1
 
     def set_relative_extruding(self):
-        self.write_command("M83 \n")
+        self.write_command("M83")
 
     def set_absolute_positioning(self):
-        self.write_command("G90 \n")
+        self.write_command("G90")
         self.moving_mode = 0
         self.set_relative_extruding()
 
     def set_current_position_as_coordinates(self, x, y, z):
-        self.write_command("G92 \tX{} \tY{} \tZ{] \n".format(x, y, z))
+        self.write_command("G92 \tX{} \tY{} \tZ{]".format(x, y, z))
 
     def set_current_position_as_start(self):
         self.set_current_position_as_coordinates(0, 0, 0)
 
     def wait_ms(self, time):
-        self.write_command("G04 \nP{}".format(time))
+        self.write_command("G04 \tP{}".format(time))
 
     def move_extruding_absolute(self, x, y, z):
         if self.moving_mode == 0:
