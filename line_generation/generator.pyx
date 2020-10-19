@@ -97,9 +97,9 @@ cdef class Slicer:
         if self.sorting == "opposite":
             i = self.generate_index()
             self.last_index += 1
-            x, y = self.find_empty_spot(i)
+            x, y = self.find_empty_spot_alternating(i)
         elif self.sorting == "consecutive":
-            x, y = self.find_empty_spot(0)
+            x, y = self.find_empty_spot_consecutive(0)
         return x, y
 
 
@@ -153,9 +153,9 @@ cdef class Slicer:
             return <int>(self.perimeter.shape[0] / 2 ** exponent * (self.last_index - self.base * 2 ** exponent))
 
 
-    cdef (int, int) find_empty_spot(self, int starting_index):
-        cdef int j
+    cdef (int, int) find_empty_spot_alternating(self, int starting_index):
         cdef int i
+        cdef int j
         for i in range(self.perimeter.shape[0]):
             j = symmetric_index(starting_index, self.perimeter.shape[0], i)
             if self.empty_elements[self.perimeter[j, 0], self.perimeter[j, 1]]:
@@ -164,6 +164,17 @@ cdef class Slicer:
                     return self.perimeter[j, 0], self.perimeter[j, 1]
         return 0, 0
 
+
+    cdef (int, int) find_empty_spot_consecutive(self, int starting_index):
+        cdef int i
+        cdef int j
+        for i in range(self.perimeter.shape[0]):
+            j = (starting_index + i) % self.perimeter.shape[0]
+            if self.empty_elements[self.perimeter[j, 0], self.perimeter[j, 1]]:
+                if check_proximity(self.filled_elements, self.line_width * self.new_line_separation, self.perimeter[j, 0],
+                                   self.perimeter[j, 1]):
+                    return self.perimeter[j, 0], self.perimeter[j, 1]
+        return 0, 0
 
 cdef int symmetric_index(int starting_index, int size, int i):
     return (starting_index + <int>(i / 2) * (-1) ** (i % 2) + size) % size
