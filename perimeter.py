@@ -30,8 +30,11 @@ def generate_print_path(printer, shape, pattern, show_plots=False, min_line_sepa
     perimeter = find_perimeter(desired_shape)
 
     perimeter = np.array(perimeter, dtype=np.int32)
-    lin.generate_lines(x_field, y_field, desired_shape, perimeter, printer, min_line_separation, sorting)
+    filled = lin.generate_lines_class(x_field, y_field, desired_shape, perimeter, printer, min_line_separation, sorting)
 
+    plt.figure(dpi=300)
+    plt.imshow(filled)
+    plt.show()
     if show_plots:
         plt.figure(figsize=(8, 8))
         plt.quiver(x, y, x_field, y_field)
@@ -39,4 +42,4 @@ def generate_print_path(printer, shape, pattern, show_plots=False, min_line_sepa
 
         # plt.imshow(desired_shape)
         # plt.show()
-    # return lines
+    return 0

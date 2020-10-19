@@ -9,7 +9,7 @@ class Nozzle:
 
 
 class Printer:
-    def __init__(self, nozzle, accuracy=0.01):
+    def __init__(self, nozzle, accuracy=0.04):
         self.accuracy = accuracy
         self.nozzle = nozzle
 
